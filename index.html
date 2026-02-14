@@ -244,16 +244,11 @@ input{
 
 <script>
 /* ===== AUTH ===== */
-const USERS = { admin: "1d3c1e6f" }; // hash("neon123")
 
-function hash(str){
-  let h = 0;
-  for(let i=0;i<str.length;i++){
-    h = (h<<5)-h+str.charCodeAt(i);
-    h |= 0;
-  }
-  return Math.abs(h).toString(16);
-}
+const USERS = {
+  admin: "neon123"
+};
+
 
 const logged = () => localStorage.getItem("auth")==="1";
 
@@ -281,7 +276,10 @@ function go(p){ location.hash=p; }
 
 /* ===== LOGIN ===== */
 function login(){
-  if(USERS[user.value.trim()] === hash(pass.value.trim())){
+  const u = user.value.trim();
+  const p = pass.value.trim();
+
+  if(USERS[u] && USERS[u] === p){
     localStorage.setItem("auth","1");
     notify("Access granted");
     go("#/dashboard");
@@ -308,3 +306,4 @@ function notify(t){
 
 </body>
 </html>
+
