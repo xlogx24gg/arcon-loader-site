@@ -289,6 +289,8 @@ function login(){
 }
 
 function logout(){
+  if(!logged()) return; // must be logged in to logout
+
   localStorage.removeItem("auth");
   notify("Logged out");
   go("#/home");
@@ -306,4 +308,5 @@ function notify(t){
 
 </body>
 </html>
+
 
