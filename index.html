@@ -170,11 +170,14 @@ footer{
 
 <script>
 // 🔥 FIREBASE CONFIG (PASTE YOURS)
-firebase.initializeApp({
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_PROJECT_ID"
-});
+const firebaseConfig = {
+  apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
+  authDomain: "arconloader.firebaseapp.com",
+  projectId: "arconloader",
+  storageBucket: "arconloader.firebasestorage.app",
+  messagingSenderId: "931229254243",
+  appId: "1:931229254243:web:aee9b1fd143cd3976c6e56"
+};
 
 const db = firebase.firestore();
 
@@ -217,3 +220,4 @@ function closeModal(){
 
 </body>
 </html>
+
