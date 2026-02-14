@@ -2,167 +2,177 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ArconLoader</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
-  --bg:#0b0f1a;
-  --card:rgba(255,255,255,.06);
-  --accent1:#00ffd5;
-  --accent2:#6a5cff;
-  --accent3:#8f00ff;
-  --text:#e6e9ff;
-  --glow:0 0 22px rgba(0,255,213,.7);
+  --bg:#070b12;
+  --panel:#0d1320;
+  --accent:#6f7cff;
+  --accent2:#27ffd1;
+  --danger:#ff4d4d;
+  --success:#35ff9b;
+  --glow:0 0 25px rgba(111,124,255,.4);
+  --radius:14px;
 }
 
-*{box-sizing:border-box}
+*{box-sizing:border-box;font-family:Inter,Segoe UI,system-ui}
 
 body{
   margin:0;
-  font-family:'Segoe UI',system-ui,sans-serif;
-  background:radial-gradient(circle at top,#141a33,var(--bg));
-  color:var(--text);
-  min-height:100vh;
+  background:radial-gradient(circle at top,#0b1224,#05070c);
+  color:#e8ecff;
 }
 
 /* NAV */
 nav{
-  position:fixed;
-  top:0;left:0;right:0;
-  height:64px;
-  background:rgba(10,15,30,.75);
-  backdrop-filter:blur(14px);
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:0 22px;
-  z-index:100;
+  align-items:center;
+  padding:18px 40px;
+  background:rgba(10,15,30,.7);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.05);
 }
 
 .logo{
-  font-weight:700;
-  background:linear-gradient(45deg,var(--accent1),var(--accent2),var(--accent3));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  cursor:pointer;
-}
-.logo:hover{ text-shadow:var(--glow); }
-
-.nav-links a{
-  margin-left:14px;
-  padding:8px 14px;
-  border-radius:10px;
-  cursor:pointer;
-  display:inline-block;
-}
-.nav-links a:hover{
-  background:rgba(255,255,255,.06);
-  box-shadow:var(--glow);
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:.5px;
+  color:var(--accent2);
 }
 
-/* PAGES */
-.page{
-  display:none;
-  padding:120px 40px 40px;
+nav a{
+  color:#cfd6ff;
+  text-decoration:none;
+  margin-left:26px;
+  font-weight:500;
+}
+
+nav a:hover{
+  color:white;
+  text-shadow:var(--glow);
+}
+
+/* PAGE */
+main{
   max-width:1200px;
-  margin:auto;
+  margin:50px auto;
+  padding:0 30px;
 }
-.page.active{display:block}
 
-/* GRID / CARD */
-.grid{
+h1{
+  font-size:32px;
+  margin-bottom:25px;
+}
+
+/* PRODUCT CARD */
+.product{
+  background:linear-gradient(180deg,#0d1320,#080c15);
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:26px;
+  border:1px solid rgba(255,255,255,.05);
+  transition:.25s;
+}
+
+.product:hover{
+  box-shadow:var(--glow);
+  transform:translateY(-2px);
+}
+
+.product-header{
+  height:120px;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+}
+
+.product-header::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.1),#0b1020);
+}
+
+.product-body{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:22px 26px;
+}
+
+.product-info h2{
+  margin:0;
+  font-size:22px;
+}
+
+.product-info p{
+  margin:6px 0 0;
+  opacity:.7;
+  font-size:14px;
+}
+
+/* STATUS */
+.status{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:600;
+}
+
+.dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+}
+
+.active{background:var(--success);box-shadow:0 0 10px var(--success)}
+.inactive{background:var(--danger);box-shadow:0 0 10px var(--danger)}
+
+/* MANAGE BUTTON */
+.manage{
+  background:linear-gradient(135deg,var(--accent),#5a67ff);
+  border:none;
+  color:white;
+  padding:12px 18px;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:.25s;
+}
+
+.manage:hover{
+  box-shadow:var(--glow);
+  transform:scale(1.03);
+}
+
+/* STATUS PAGE BOX (unchanged style) */
+.status-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:24px;
+  gap:22px;
 }
 
-.card{
-  background:var(--card);
-  border-radius:16px;
-  padding:20px;
-  border:1px solid rgba(255,255,255,.08);
+.status-box{
+  background:var(--panel);
+  padding:22px;
+  border-radius:var(--radius);
+  border:1px solid rgba(255,255,255,.05);
 }
 
-.card img{
-  width:64px;
-  height:64px;
-  border-radius:12px;
+.status-box h3{
+  margin:0 0 8px;
 }
 
-.status{
-  margin-top:8px;
-  font-weight:600;
-}
-
-.status.green{color:#3cff9a}
-.status.red{color:#ff5c5c}
-
-.btn{
-  margin-top:12px;
-  padding:10px 16px;
-  border-radius:12px;
-  background:linear-gradient(45deg,var(--accent1),var(--accent2));
-  color:#000;
-  font-weight:600;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-}
-.btn:hover{box-shadow:var(--glow)}
-
-/* MODAL */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:300;
-}
-.modal.active{display:flex}
-
-.modal-box{
-  background:var(--bg);
-  padding:24px;
-  border-radius:16px;
-  width:320px;
-}
-
-/* LOGIN */
-.login-box{
-  max-width:360px;
-  margin:auto;
-  background:var(--card);
-  padding:28px;
-  border-radius:16px;
+footer{
+  opacity:.4;
   text-align:center;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:10px;
-  border:none;
-  background:rgba(0,0,0,.35);
-  color:var(--text);
-}
-
-/* TOAST */
-#notifications{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-}
-.toast{
-  background:linear-gradient(45deg,var(--accent2),var(--accent3));
-  padding:12px 16px;
-  border-radius:12px;
-  box-shadow:var(--glow);
-  margin-top:10px;
+  padding:30px;
 }
 </style>
 </head>
@@ -170,126 +180,59 @@ input{
 <body>
 
 <nav>
-  <div class="logo" onclick="go('#/home')">ArconLoader</div>
-  <div class="nav-links">
-    <a onclick="go('#/products')">Products</a>
-    <a onclick="go('#/dashboard')">Dashboard</a>
-    <a onclick="logout()">Logout</a>
+  <div class="logo">ArconLoader</div>
+  <div>
+    <a href="#">🏠 Home</a>
+    <a href="#">📦 Products</a>
+    <a href="#">📊 Status</a>
+    <a href="#">🚪 Logout</a>
   </div>
 </nav>
 
-<div id="notifications"></div>
+<main>
 
-<!-- HOME -->
-<div id="home" class="page active">
-  <h1>Welcome to ArconLoader</h1>
-  <p>Modern loader management interface.</p>
-</div>
+<h1>Products</h1>
 
-<!-- PRODUCTS -->
-<div id="products" class="page">
-  <h1>Active Products</h1>
-  <div class="grid">
-
-    <div class="card">
-      <img src="https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg">
-      <h3>Rust</h3>
-      <div id="rustStatus" class="status">Loading...</div>
-      <div class="btn" onclick="openManage()">🔑 Manage</div>
+<!-- PRODUCT -->
+<div class="product">
+  <div class="product-header" style="background-image:url('https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg')"></div>
+  <div class="product-body">
+    <div class="product-info">
+      <h2>Rust</h2>
+      <p>ArconLoader • Game Module</p>
     </div>
 
+    <div class="status">
+      <div class="dot active"></div>
+      Active
+    </div>
+
+    <button class="manage">🔑 Manage</button>
   </div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="page">
-  <h1>Dashboard</h1>
-  <p>System overview coming soon.</p>
-</div>
+<h1>Status</h1>
 
-<!-- LOGIN -->
-<div id="login" class="page">
-  <div class="login-box">
-    <h2>Login</h2>
-    <input id="user" placeholder="Username">
-    <input id="pass" type="password" placeholder="Password">
-    <div class="btn" onclick="login()">Login</div>
+<div class="status-grid">
+  <div class="status-box">
+    <h3>Authentication</h3>
+    <p>Status: Online</p>
+  </div>
+  <div class="status-box">
+    <h3>Loader API</h3>
+    <p>Status: Online</p>
+  </div>
+  <div class="status-box">
+    <h3>Game Services</h3>
+    <p>Status: Online</p>
   </div>
 </div>
 
-<!-- MODAL -->
-<div id="manageModal" class="modal">
-  <div class="modal-box">
-    <h3>Rust Status</h3>
-    <select id="statusSelect">
-      <option value="online">Online</option>
-      <option value="offline">Offline</option>
-    </select>
-    <div class="btn" onclick="saveStatus()">Save</div>
-  </div>
-</div>
+</main>
 
-<script>
-const USERS={admin:"neon123"};
-const logged=()=>localStorage.getItem("auth")==="1";
-
-window.onhashchange=route;
-window.onload=route;
-
-function route(){
-  const r=location.hash||"#/home";
-  if((r==="#/products"||r==="#/dashboard")&&!logged()){
-    notify("Login required");
-    return go("#/login");
-  }
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(r.replace("#/","")).classList.add("active");
-  loadStatus();
-}
-
-function go(p){location.hash=p}
-
-function login(){
-  if(USERS[user.value]===pass.value){
-    localStorage.setItem("auth","1");
-    notify("Logged in");
-    go("#/dashboard");
-  } else notify("Invalid credentials");
-}
-
-function logout(){
-  if(!logged()) return;
-  localStorage.removeItem("auth");
-  notify("Logged out");
-  go("#/home");
-}
-
-function openManage(){
-  if(!logged()) return notify("Login required");
-  manageModal.classList.add("active");
-}
-
-function saveStatus(){
-  localStorage.setItem("rustStatus",statusSelect.value);
-  manageModal.classList.remove("active");
-  loadStatus();
-  notify("Status updated");
-}
-
-function loadStatus(){
-  const s=localStorage.getItem("rustStatus")||"offline";
-  rustStatus.textContent=s==="online"?"Online":"Offline";
-  rustStatus.className="status "+(s==="online"?"green":"red");
-}
-
-function notify(t){
-  const d=document.createElement("div");
-  d.className="toast";
-  d.textContent=t;
-  notifications.appendChild(d);
-  setTimeout(()=>d.remove(),3000);
-}
-</script>
+<footer>
+© 2026 ArconLoader
+</footer>
 
 </body>
 </html>
