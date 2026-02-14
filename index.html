@@ -1,220 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ArconLoader</title>
+
 <style>
-:root {
-  --bg: #0b0f1a;
-  --panel: #0d1320;
-  --accent1: #00ffd5;
-  --accent2: #6a5cff;
-  --accent3: #8f00ff;
-  --dot-green: #35ff9b;
-  --text: #e6e9ff;
-  --muted: #9aa0c7;
-  --glow: 0 0 20px rgba(111,124,255,0.5);
-  --radius: 12px;
-  --hover-scale: 1.03;
-  --transition: 0.25s;
+:root{
+  --bg:#0b0f1a;
+  --card:#12172a;
+  --accent:#6f7cff;
+  --text:#e6e9ff;
+  --muted:#9aa0c7;
+  --glow:0 0 18px rgba(111,124,255,.45);
 }
 
-*{box-sizing:border-box;font-family:'Segoe UI',sans-serif;margin:0;padding:0;}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI,system-ui;
+  background:radial-gradient(circle at top,#141a33,var(--bg));
+  color:var(--text);
+}
 
-body {
-  background: radial-gradient(circle at top,#141a33,var(--bg));
-  color: var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:64px;
+  background:rgba(10,15,30,.85);
+  backdrop-filter:blur(12px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  z-index:10;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+.logo:hover{ text-shadow:var(--glow); }
+
+nav button{
+  background:none;
+  border:none;
+  color:var(--text);
+  margin-left:16px;
+  cursor:pointer;
+  opacity:.8;
+}
+nav button:hover{opacity:1;text-shadow:var(--glow)}
+
+main{
+  max-width:1100px;
+  margin:110px auto 80px;
+  padding:0 30px;
+}
+
+h1{margin-bottom:10px}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+  margin-top:30px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:22px;
   position:relative;
+  transition:.25s;
+  border:1px solid rgba(255,255,255,.05);
+}
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:var(--glow);
 }
 
-/* NAVIGATION */
-nav {
-  position: fixed; top:0; left:0; right:0; height:64px;
-  display:flex; justify-content: space-between; align-items:center;
-  padding:0 30px; background: rgba(10,15,30,0.85);
-  backdrop-filter: blur(12px); z-index:1000;
-}
-nav .logo { font-size:22px; font-weight:800; color: var(--accent2); cursor:pointer; transition: var(--transition); }
-nav .logo:hover { text-shadow: var(--glow); }
-.nav-links button {
-  background:none; border:none; color: var(--text); margin-left:20px;
-  font-size:16px; cursor:pointer; transition: var(--transition);
-}
-.nav-links button:hover { color:white; text-shadow: var(--glow); transform: scale(var(--hover-scale)); }
-
-/* PAGES */
-.page { display: none; padding:100px 30px 50px; min-height:100vh; }
-.page.active { display:block; }
-
-/* WATERMARK */
-.watermark {
-  position: fixed; bottom:10px; left:50%; transform:translateX(-50%);
-  font-size:12px; color: rgba(255,255,255,0.15);
-  pointer-events:none;
+.status-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#2cff8f;
+  display:inline-block;
+  margin-right:8px;
+  animation:pulse 5s infinite;
 }
 
-/* HOME PAGE */
-.stats { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; margin-top:30px; }
-.stat-box {
-  background: var(--panel); padding:20px; border-radius: var(--radius);
-  width:200px; text-align:center; box-shadow:0 0 12px rgba(111,124,255,0.2); transition: var(--transition);
+@keyframes pulse{
+  0%{opacity:.3}
+  50%{opacity:1}
+  100%{opacity:.3}
 }
-.stat-box:hover { transform: scale(var(--hover-scale)); box-shadow: var(--glow); }
-.stat-box h2 { margin-bottom:8px; font-size:18px; }
-.stat-box .big { font-size:42px; font-weight:800; display:block; margin:0 auto; }
 
-/* PRODUCTS PAGE */
-.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
-.card {
-  background: var(--panel); border-radius: var(--radius);
-  overflow:hidden; box-shadow:0 0 12px rgba(111,124,255,0.15); transition: var(--transition);
+.btn{
+  margin-top:14px;
+  padding:10px 16px;
+  background:linear-gradient(45deg,var(--accent),#8f9bff);
+  border-radius:10px;
+  color:#000;
+  font-weight:600;
+  cursor:pointer;
+  border:none;
 }
-.card:hover { transform: translateY(-3px); box-shadow: var(--glow); }
-.card img { width:100%; height:140px; object-fit:cover; }
-.card-body { padding:16px; display:flex; flex-direction:column; gap:8px; }
-.card-body h3 { margin:0; }
-.status-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
-.manage-btn {
-  background: linear-gradient(135deg,var(--accent2),var(--accent3));
-  border:none; color:white; padding:8px; border-radius:10px; font-weight:600;
-  cursor:pointer; transition: var(--transition); display:flex; justify-content:center; align-items:center;
+.btn:hover{box-shadow:var(--glow)}
+
+footer{
+  position:fixed;
+  bottom:10px;
+  width:100%;
+  text-align:center;
+  font-size:12px;
+  opacity:.4;
 }
-.manage-btn:hover { box-shadow: var(--glow); transform: scale(var(--hover-scale)); }
 
-/* STATUS PAGE */
-.status-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; justify-items:center; }
-.status-box {
-  background: var(--panel); padding:16px; border-radius: var(--radius);
-  width:100%; box-shadow: var(--glow); display:flex; align-items:center; justify-content:space-between; transition: var(--transition);
+/* POPUP */
+#popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:20;
 }
-.status-box:hover { transform: scale(var(--hover-scale)); }
-.flash-dot { width:10px; height:10px; border-radius:50%; background: var(--dot-green); animation:flash 5s infinite; }
-@keyframes flash { 0%,50%,100%{opacity:1;} 25%,75%{opacity:0.2;} }
 
-/* LOGIN PAGE */
-.login-box { max-width:400px; margin:auto; background: var(--panel); padding:28px; border-radius: var(--radius); text-align:center; }
-.login-box input { width:100%; padding:12px; margin:8px 0; border-radius:8px; border:none; background: rgba(0,0,0,.3); color: var(--text); }
-.login-box .btn { margin-top:12px; padding:12px 18px; border-radius:12px; background: linear-gradient(45deg,var(--accent2),var(--accent3)); color:#000; font-weight:600; cursor:pointer; transition: var(--transition); }
-.login-box .btn:hover { box-shadow: var(--glow); transform: scale(var(--hover-scale)); }
-
-/* TOAST NOTIFICATIONS */
-.toast {
-  position: fixed; bottom:20px; right:20px; padding:12px 18px; border-radius:10px;
-  background: linear-gradient(45deg,var(--accent2),var(--accent3)); color:#000; box-shadow: var(--glow);
-  animation: slideIn 0.4s ease;
+.popup-box{
+  background:var(--card);
+  padding:30px;
+  border-radius:16px;
+  width:420px;
+  max-width:90%;
 }
-@keyframes slideIn { from { transform: translateX(120%); opacity:0; } to { transform:translateX(0); opacity:1; } }
 
+.key-list{
+  margin-top:14px;
+  font-family:monospace;
+  font-size:14px;
+  line-height:1.6;
+}
 </style>
 </head>
+
 <body>
 
 <nav>
-  <div class="logo" onclick="showPage('home')">ArconLoader</div>
-  <div class="nav-links">
-    <button onclick="showPage('home')">🏠 Home</button>
-    <button onclick="requireLogin('products')">📦 Products</button>
-    <button onclick="requireLogin('status')">📊 Status</button>
-    <button onclick="logout()">🚪 Logout</button>
+  <div class="logo" onclick="location.reload()">ArconLoader</div>
+  <div>
+    <button onclick="openPopup()">Manage</button>
   </div>
 </nav>
 
-<!-- HOME PAGE -->
-<div id="home" class="page active">
-  <h1>Welcome to ArconLoader</h1>
-  <p>Monitor users, products, and system status in one modern dashboard.</p>
-  <div class="stats">
-    <div class="stat-box">
-      <h2>Active Users</h2>
-      <span class="big">1000</span>
-    </div>
-    <div class="stat-box">
-      <h2>System Status</h2>
-      <p>All services operational</p>
-    </div>
+<main>
+<h1>Welcome to ArconLoader</h1>
+<p class="muted">Secure loader dashboard powered by Firebase.</p>
+
+<div class="cards">
+  <div class="card">
+    <h2 id="productName">Loading…</h2>
+    <p><span class="status-dot"></span><span id="productStatus">Checking status…</span></p>
+    <button class="btn" onclick="openPopup()">Manage</button>
+  </div>
+</div>
+</main>
+
+<footer>© 2026 ArconLoader™</footer>
+
+<!-- POPUP -->
+<div id="popup">
+  <div class="popup-box">
+    <h3>Available Keys</h3>
+    <div class="key-list" id="keysBox">Loading…</div>
+    <button class="btn" onclick="closePopup()">Close</button>
   </div>
 </div>
 
-<!-- PRODUCTS PAGE -->
-<div id="products" class="page">
-  <h1>Products</h1>
-  <div class="grid">
-    <div class="card">
-      <img src="https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg" alt="Rust">
-      <div class="card-body">
-        <h3>Rust</h3>
-        <span class="status-dot"></span> Active
-        <button class="manage-btn">🔑 Manage</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- STATUS PAGE -->
-<div id="status" class="page">
-  <h1>Status</h1>
-  <div class="status-grid">
-    <div class="status-box">
-      <span>Auth Server — Online</span>
-      <span class="flash-dot"></span>
-    </div>
-    <div class="status-box">
-      <span>Loader API — Online</span>
-      <span class="flash-dot"></span>
-    </div>
-    <div class="status-box">
-      <span>Game Services — Online</span>
-      <span class="flash-dot"></span>
-    </div>
-  </div>
-</div>
-
-<!-- LOGIN PAGE -->
-<div id="login" class="page">
-  <div class="login-box">
-    <h2>Login</h2>
-    <input id="user" placeholder="Username">
-    <input id="pass" type="password" placeholder="Password">
-    <div class="btn" onclick="login()">Login</div>
-    <p style="margin-top:10px;font-size:13px;opacity:0.7;">Demo: admin / neon123</p>
-  </div>
-</div>
-
-<div class="watermark">© 2026 ArconLoader™</div>
+<!-- 🔥 FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-// ===== AUTH =====
-function logged(){ return localStorage.getItem('auth')==='true'; }
-function requireLogin(page){
-  if(!logged()){ showPage('login'); notify('Please login first'); return; }
-  showPage(page);
-}
-function login(){
-  const u=document.getElementById('user').value;
-  const p=document.getElementById('pass').value;
-  if(u==='admin' && p==='neon123'){
-    localStorage.setItem('auth','true'); notify('Login successful'); showPage('home');
-  } else notify('Invalid credentials');
-}
-function logout(){
-  if(!logged()){ notify('Not logged in'); return; }
-  localStorage.removeItem('auth'); notify('Logged out'); showPage('login');
+/* =====================
+   🔧 PASTE YOUR CONFIG
+   ===================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
+  authDomain: "arconloader.firebaseapp.com",
+  projectId: "arconloader",
+  storageBucket: "arconloader.firebasestorage.app",
+  messagingSenderId: "931229254243",
+  appId: "1:931229254243:web:aee9b1fd143cd3976c6e56"
+};
+  
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+auth.signInAnonymously();
+
+/* =====================
+   LOAD PRODUCT
+   ===================== */
+db.collection("products").doc("rust").get().then(doc=>{
+  const data = doc.data();
+  document.getElementById("productName").innerText = data.name;
+  document.getElementById("productStatus").innerText = data.status;
+});
+
+/* =====================
+   POPUP / KEYS
+   ===================== */
+function openPopup(){
+  document.getElementById("popup").style.display="flex";
+  const box = document.getElementById("keysBox");
+  box.innerText="Loading…";
+
+  db.collection("products").doc("rust").collection("keys").get().then(snap=>{
+    let out="";
+    snap.forEach(d=>{
+      out += d.data().value + "\n";
+    });
+    box.innerText = out || "No keys available";
+  });
 }
 
-// ===== PAGE SWITCH =====
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// ===== TOAST =====
-function notify(text){
-  const t=document.createElement('div'); t.className='toast'; t.innerText=text;
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(),3500);
+function closePopup(){
+  document.getElementById("popup").style.display="none";
 }
 </script>
 
