@@ -13,7 +13,7 @@
   --accent2:#6a5cff;
   --accent3:#8f00ff;
   --text:#e6e9ff;
-  --glow:0 0 25px rgba(0,255,213,.6);
+  --glow:0 0 22px rgba(0,255,213,.7);
 }
 
 *{box-sizing:border-box}
@@ -36,9 +36,9 @@ body{
   justify-content:center;
   z-index:9999;
 }
-
 .spinner{
-  width:80px;height:80px;
+  width:80px;
+  height:80px;
   border-radius:50%;
   border:4px solid rgba(255,255,255,.1);
   border-top:4px solid var(--accent1);
@@ -78,44 +78,34 @@ nav{
   transform:scale(1.2);
 }
 
-/* LOGO */
+/* LOGO (GLOW ONLY) */
 .logo{
   font-weight:700;
   letter-spacing:1px;
   background:linear-gradient(45deg,var(--accent1),var(--accent2),var(--accent3));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  position:relative;
   cursor:pointer;
+  transition:.25s;
 }
-
-.logo::after{
-  content:"";
-  position:absolute;
-  inset:-10px;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,.5),transparent);
-  transform:translateX(-120%);
-  opacity:0;
-}
-
 .logo:hover{
-  text-shadow:0 0 30px rgba(140,255,255,.9);
+  text-shadow:0 0 26px rgba(0,255,213,.9);
 }
 
-.logo:hover::after{
-  animation:shine 1s ease forwards;
-  opacity:1;
-}
-@keyframes shine{to{transform:translateX(120%)}}
-
+/* NAV LINKS */
 .nav-links a{
-  margin-left:18px;
+  margin-left:14px;
+  padding:8px 14px;
+  border-radius:10px;
   cursor:pointer;
+  display:inline-block;
   opacity:.85;
+  transition:.2s;
 }
 .nav-links a:hover{
   opacity:1;
-  text-shadow:var(--glow);
+  background:rgba(255,255,255,.06);
+  box-shadow:var(--glow);
 }
 
 /* ===== PAGES ===== */
@@ -154,6 +144,7 @@ nav{
   color:#000;
   font-weight:600;
   cursor:pointer;
+  display:inline-block;
 }
 .btn:hover{box-shadow:var(--glow)}
 
@@ -176,7 +167,7 @@ input{
   color:var(--text);
 }
 
-/* ===== NOTIFY ===== */
+/* ===== NOTIFICATIONS ===== */
 #notifications{
   position:fixed;
   bottom:20px;
@@ -221,7 +212,7 @@ input{
 <!-- PAGES -->
 <div id="home" class="page active">
   <h1>Welcome to NeonLoader</h1>
-  <p>Secure, modern loader experience.</p>
+  <p>Modern, secure loader interface.</p>
 </div>
 
 <div id="products" class="page">
@@ -244,43 +235,59 @@ input{
 
 <div id="login" class="page">
   <div class="login-box">
-    <h2>Access Required</h2>
+    <h2>Authentication Required</h2>
     <input id="user" placeholder="Username">
     <input id="pass" type="password" placeholder="Password">
-    <div class="btn" onclick="login()">Authenticate</div>
+    <div class="btn" onclick="login()">Login</div>
   </div>
 </div>
 
 <script>
-const USERS={admin:"3b9aca00"};
-const hash=s=>Math.abs([...s].reduce((a,c)=>((a<<5)-a)+c.charCodeAt(0),0)).toString(16);
-const logged=()=>localStorage.getItem("auth")==="1";
+/* ===== AUTH ===== */
+const USERS = { admin: "1d3c1e6f" }; // hash("neon123")
 
-window.onload=()=>{
+function hash(str){
+  let h = 0;
+  for(let i=0;i<str.length;i++){
+    h = (h<<5)-h+str.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h).toString(16);
+}
+
+const logged = () => localStorage.getItem("auth")==="1";
+
+/* ===== ROUTER ===== */
+window.onload = () => {
   setTimeout(()=>loader.style.display="none",700);
   route();
-}
-window.onhashchange=route;
+};
+window.onhashchange = route;
 
 function route(){
-  let r=location.hash||"#/home";
-  let secure=["#/dashboard","#/products"];
-  if(secure.includes(r)&&!logged()){
-    notify("Authentication required");
+  const r = location.hash || "#/home";
+  const secure = ["#/dashboard","#/products"];
+
+  if(secure.includes(r) && !logged()){
+    notify("Please login first");
     return go("#/login");
   }
+
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(r.replace("#/","")).classList.add("active");
 }
 
-function go(p){location.hash=p}
+function go(p){ location.hash=p; }
 
+/* ===== LOGIN ===== */
 function login(){
-  if(USERS[user.value]===hash(pass.value)){
+  if(USERS[user.value.trim()] === hash(pass.value.trim())){
     localStorage.setItem("auth","1");
     notify("Access granted");
     go("#/dashboard");
-  } else notify("Access denied");
+  } else {
+    notify("Invalid credentials");
+  }
 }
 
 function logout(){
@@ -289,8 +296,9 @@ function logout(){
   go("#/home");
 }
 
+/* ===== TOAST ===== */
 function notify(t){
-  let d=document.createElement("div");
+  const d=document.createElement("div");
   d.className="toast";
   d.textContent=t;
   notifications.appendChild(d);
