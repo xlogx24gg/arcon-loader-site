@@ -18,7 +18,6 @@
   --glow:#4c6fff;
   --text:#e6ebff;
   --muted:#9aa6ff;
-  --accent:#4c6fff;
 }
 *{box-sizing:border-box;font-family:Inter,system-ui;margin:0;padding:0}
 body{
@@ -39,28 +38,16 @@ header{
   color: transparent;
   transition: .3s;
 }
-.logo:hover{
-  text-shadow:0 0 10px var(--glow);
-}
-.nav a{
-  margin-right:16px;cursor:pointer;color:var(--muted);
-  transition:.2s;
-}
+.logo:hover{ text-shadow:0 0 10px var(--glow); }
+.nav a{ margin-right:16px; cursor:pointer; color:var(--muted); transition:.2s;}
 .nav a:hover{color:#fff;text-shadow:0 0 10px var(--glow);}
 button{
   background:linear-gradient(90deg, #4c6fff, #38ffe0);
-  border:none;color:#050812;
-  font-weight:600;
-  padding:10px 16px;
-  border-radius:12px;
-  cursor:pointer;
-  transition:.3s;
+  border:none;color:#050812;font-weight:600;
+  padding:10px 16px;border-radius:12px;cursor:pointer;transition:.3s;
   box-shadow:0 0 5px #4c6fff66;
 }
-button:hover{
-  box-shadow:0 0 20px var(--glow);
-  transform:translateY(-2px);
-}
+button:hover{box-shadow:0 0 20px var(--glow); transform:translateY(-2px);}
 
 .page{display:none;padding:24px}
 .page.active{display:block}
@@ -68,101 +55,61 @@ button:hover{
 .card{
   background:linear-gradient(180deg,#0d1635,#070b18);
   border:1px solid var(--border);
-  border-radius:16px;
-  padding:20px;
+  border-radius:16px;padding:20px;
   transition:.3s;
 }
-.card:hover{
-  box-shadow:0 0 25px var(--glow);
-  transform: translateY(-2px);
-}
+.card:hover{box-shadow:0 0 25px var(--glow);transform: translateY(-2px);}
 
 .stat-box{
   width:260px;text-align:center;margin:60px auto;
 }
-.stat-number{
-  font-size:42px;font-weight:800;
-}
+.stat-number{font-size:42px;font-weight:800;}
 
-.products{
-  display:flex;gap:20px;flex-wrap:wrap;margin-top:20px;
-  justify-content:center;
-}
-.product{
-  width:260px;
-  display:flex;flex-direction:column;align-items:center;
-  transition:.3s;
-}
-.product img{
-  width:100%;height:110px;object-fit:contain;
-  border-radius:10px;
-}
-.status-container{
-  display:flex;align-items:center;gap:8px;margin:8px 0;
-}
-.status-dot{
-  width:12px;height:12px;border-radius:50%;
-  animation:pulse 2.5s infinite;
-}
-.online{background:#00ff88}
-.offline{background:#ff4444}
+.products{ display:flex; gap:20px; flex-wrap:wrap; margin-top:20px; justify-content:center; }
+.product{ width:260px; display:flex; flex-direction:column; align-items:center; transition:.3s; }
+.product img{ width:100%; height:110px; object-fit:contain; border-radius:10px; }
+.status-container{ display:flex; align-items:center; gap:8px; margin:8px 0; }
+.status-dot{ width:12px; height:12px; border-radius:50%; animation:pulse 2.5s infinite; }
+.online{background:#00ff88;}
+.offline{background:#ff4444;}
+@keyframes pulse{0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
+.product button{ width:100%; margin-top:10px; font-weight:600; }
 
-@keyframes pulse{
-  0%{opacity:.3}
-  50%{opacity:1}
-  100%{opacity:.3}
-}
-
-.product button{
-  width:100%;
-  margin-top:10px;
-  font-weight:600;
-}
-
-.modal{
-  position:fixed;inset:0;background:#000a;
-  display:none;align-items:center;justify-content:center;
-  z-index:100;
-}
+.modal{ position:fixed; inset:0; background:#000a; display:none; align-items:center; justify-content:center; z-index:100; }
 .modal.show{display:flex}
-.modal-box{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:20px;
-  width:420px;
-  animation:slideUp .4s;
-}
-@keyframes slideUp{
-  from{transform:translateY(40px);opacity:0}
-  to{transform:none;opacity:1}
-}
+.modal-box{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px; width:420px; animation:slideUp .4s; }
+@keyframes slideUp{ from{transform:translateY(40px);opacity:0} to{transform:none;opacity:1} }
+.close{ float:right; cursor:pointer; color:#aaa; font-size:18px; }
+.close:hover{ color:#fff; }
 
-.close{
-  float:right;cursor:pointer;color:#aaa;font-size:18px;
-}
-.close:hover{color:#fff}
+footer{ position:fixed; bottom:0; width:100%; text-align:center; padding:14px; color:#5560aa; font-size:12px; background:transparent; }
 
-footer{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  text-align:center;padding:14px;
-  color:#5560aa;font-size:12px;
-  background:transparent;
+.status-page .card{ margin-top:20px; }
+
+/* LOADING SCREEN */
+#loadingScreen{
+  position:fixed; inset:0; background:#000c; display:flex;
+  align-items:center; justify-content:center; z-index:9999;
 }
-.status-page .card{margin-top:20px}
+.spinner{
+  width:50px; height:50px; border:6px solid #4c6fff33;
+  border-top-color:#4c6fff; border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{ 0%{transform:rotate(0deg);}100%{transform:rotate(360deg);} }
 </style>
 </head>
 
 <body>
 
+<div id="loadingScreen"><div class="spinner"></div></div>
+
 <header>
   <div class="logo" onclick="go('home')">ArconLoader</div>
   <div class="nav">
-    <a onclick="go('home')">🏠 Home</a>
-    <a onclick="go('products')">📦 Products</a>
-    <a onclick="go('status')">📡 Status</a>
+    <a onclick="switchPage('home')">🏠 Home</a>
+    <a onclick="switchPage('products')">📦 Products</a>
+    <a onclick="switchPage('status')">📡 Status</a>
   </div>
   <button id="logoutBtn" onclick="logout()" disabled>Logout</button>
 </header>
@@ -194,8 +141,8 @@ footer{
 <!-- STATUS -->
 <div class="page status-page" id="status">
   <h2>Status</h2>
-  <div class="card">✅ Auth Server — <span class="status-dot online" id="authDot"></span> Online</div>
-  <div class="card">✅ Loader API — <span class="status-dot online" id="loaderDot"></span> Online</div>
+  <div class="card">Auth Server — <span class="status-dot online" id="authDot"></span> Online</div>
+  <div class="card">Loader API — <span class="status-dot online" id="loaderDot"></span> Online</div>
 </div>
 
 <!-- MODAL -->
@@ -210,7 +157,7 @@ footer{
 <footer>© 2026 ArconLoader™</footer>
 
 <script>
-// FIREBASE CONFIG
+// FIREBASE INIT
 const firebaseConfig = {
   apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
   authDomain: "arconloader.firebaseapp.com",
@@ -223,57 +170,75 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-function go(p){
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.getElementById(p).classList.add('active');
+// PAGE LOADING
+function switchPage(pageId){
+  document.getElementById("loadingScreen").style.display="flex";
+  setTimeout(()=>{
+    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.getElementById("loadingScreen").style.display="none";
+  }, 500);
 }
 
+// LOGOUT
 function logout(){
   if(!auth.currentUser) return;
-  auth.signOut().then(()=>document.getElementById("logoutBtn").disabled=true);
+  auth.signOut().then(()=>{ 
+    document.getElementById("logoutBtn").disabled = true;
+    alert("Logged out");
+  }).catch(err=>{ console.error(err); alert("Logout failed"); });
 }
 
+// Enable logout button
 auth.onAuthStateChanged(user=>{
   document.getElementById("logoutBtn").disabled = !user;
 });
 
-// Active Users
+// ACTIVE USERS
 db.doc("stats/global").onSnapshot(d=>{
   const data = d.data();
-  document.getElementById("users").innerText = data && data.activeUsers!==undefined ? data.activeUsers : "—";
+  if(data && data.activeUsers !== undefined){
+    document.getElementById("users").innerText = data.activeUsers;
+    console.log("Active Users:", data.activeUsers);
+  }else{
+    document.getElementById("users").innerText="—";
+    console.log("Active Users data missing", d.data());
+  }
 });
 
-// Rust status
+// RUST STATUS
 db.doc("products/rust").onSnapshot(d=>{
   const s = d.data()?.status || "offline";
   document.getElementById("rustText").innerText = s.charAt(0).toUpperCase()+s.slice(1);
   document.getElementById("rustStatus").className = "status-dot "+(s==="online"?"online":"offline");
 });
 
-// Open keys modal from nested collection
+// STATUS PAGE DOTS (blink like products)
+db.doc("status/servers").onSnapshot(d=>{
+  const servers = d.data();
+  if(servers?.authOnline) document.getElementById("authDot").className = "status-dot online";
+  else document.getElementById("authDot").className="status-dot offline";
+  if(servers?.loaderOnline) document.getElementById("loaderDot").className = "status-dot online";
+  else document.getElementById("loaderDot").className="status-dot offline";
+});
+
+// KEYS MODAL
 function openKeys(){
   const list = document.getElementById("keyList");
-  list.innerHTML = "Loading...";
+  list.innerHTML="Loading...";
   db.collection("products").doc("rust").collection("keys").get().then(q=>{
     list.innerHTML="";
-    if(q.empty){
-      list.innerHTML="<div>No keys found</div>";
-      return;
-    }
+    if(q.empty){ list.innerHTML="<div>No keys found</div>"; return; }
     q.forEach(doc=>{
       const val = doc.data()?.value || "—";
-      list.innerHTML += `<div><strong>${doc.id}</strong>: ${val}</div>`;
+      list.innerHTML+=`<div><strong>${doc.id}</strong>: ${val}</div>`;
     });
-  }).catch(err=>{
-    console.error(err);
-    list.innerHTML = "<div>Error loading keys</div>";
-  });
+  }).catch(err=>{ console.error(err); list.innerHTML="<div>Error loading keys</div>"; });
   document.getElementById("modal").classList.add("show");
 }
-function closeModal(){
-  document.getElementById("modal").classList.remove("show");
-}
-</script>
+function closeModal(){ document.getElementById("modal").classList.remove("show"); }
 
+window.onload = ()=>{ setTimeout(()=>{document.getElementById("loadingScreen").style.display="none"},500); }
+</script>
 </body>
 </html>
