@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeonLoader</title>
+<title>ArconLoader</title>
 
 <style>
 :root{
@@ -26,28 +26,7 @@ body{
   min-height:100vh;
 }
 
-/* ===== LOADER ===== */
-#loader{
-  position:fixed;
-  inset:0;
-  background:var(--bg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-.spinner{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  border:4px solid rgba(255,255,255,.1);
-  border-top:4px solid var(--accent1);
-  animation:spin 1s linear infinite;
-  box-shadow:var(--glow);
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ===== NAV ===== */
+/* NAV */
 nav{
   position:fixed;
   top:0;left:0;right:0;
@@ -61,54 +40,28 @@ nav{
   z-index:100;
 }
 
-.left{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-/* HOME ICON */
-.home-btn{
-  font-size:22px;
-  cursor:pointer;
-  filter:drop-shadow(0 0 8px rgba(0,255,213,.7));
-  transition:.25s;
-}
-.home-btn:hover{
-  transform:scale(1.2);
-}
-
-/* LOGO (GLOW ONLY) */
 .logo{
   font-weight:700;
-  letter-spacing:1px;
   background:linear-gradient(45deg,var(--accent1),var(--accent2),var(--accent3));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   cursor:pointer;
-  transition:.25s;
 }
-.logo:hover{
-  text-shadow:0 0 26px rgba(0,255,213,.9);
-}
+.logo:hover{ text-shadow:var(--glow); }
 
-/* NAV LINKS */
 .nav-links a{
   margin-left:14px;
   padding:8px 14px;
   border-radius:10px;
   cursor:pointer;
   display:inline-block;
-  opacity:.85;
-  transition:.2s;
 }
 .nav-links a:hover{
-  opacity:1;
   background:rgba(255,255,255,.06);
   box-shadow:var(--glow);
 }
 
-/* ===== PAGES ===== */
+/* PAGES */
 .page{
   display:none;
   padding:120px 40px 40px;
@@ -117,89 +70,107 @@ nav{
 }
 .page.active{display:block}
 
-/* ===== CARDS ===== */
+/* GRID / CARD */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:24px;
 }
+
 .card{
   background:var(--card);
   border-radius:16px;
-  padding:24px;
+  padding:20px;
   border:1px solid rgba(255,255,255,.08);
-  transition:.25s;
-}
-.card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 0 30px rgba(106,92,255,.35);
 }
 
-/* ===== BUTTON ===== */
+.card img{
+  width:64px;
+  height:64px;
+  border-radius:12px;
+}
+
+.status{
+  margin-top:8px;
+  font-weight:600;
+}
+
+.status.green{color:#3cff9a}
+.status.red{color:#ff5c5c}
+
 .btn{
   margin-top:12px;
-  padding:12px 18px;
+  padding:10px 16px;
   border-radius:12px;
   background:linear-gradient(45deg,var(--accent1),var(--accent2));
   color:#000;
   font-weight:600;
   cursor:pointer;
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
 }
 .btn:hover{box-shadow:var(--glow)}
 
-/* ===== LOGIN ===== */
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:300;
+}
+.modal.active{display:flex}
+
+.modal-box{
+  background:var(--bg);
+  padding:24px;
+  border-radius:16px;
+  width:320px;
+}
+
+/* LOGIN */
 .login-box{
-  max-width:380px;
+  max-width:360px;
   margin:auto;
   background:var(--card);
-  padding:32px;
-  border-radius:20px;
+  padding:28px;
+  border-radius:16px;
   text-align:center;
 }
+
 input{
   width:100%;
-  margin:10px 0;
   padding:12px;
+  margin:10px 0;
   border-radius:10px;
   border:none;
   background:rgba(0,0,0,.35);
   color:var(--text);
 }
 
-/* ===== NOTIFICATIONS ===== */
+/* TOAST */
 #notifications{
   position:fixed;
   bottom:20px;
   right:20px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  z-index:200;
 }
 .toast{
   background:linear-gradient(45deg,var(--accent2),var(--accent3));
-  padding:14px 18px;
+  padding:12px 16px;
   border-radius:12px;
   box-shadow:var(--glow);
-  animation:slide .4s ease;
-}
-@keyframes slide{
-  from{transform:translateX(120%);opacity:0}
-  to{transform:translateX(0);opacity:1}
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="loader"><div class="spinner"></div></div>
-
 <nav>
-  <div class="left">
-    <div class="home-btn" onclick="go('#/home')">⌬</div>
-    <div class="logo" onclick="go('#/home')">NeonLoader</div>
-  </div>
+  <div class="logo" onclick="go('#/home')">ArconLoader</div>
   <div class="nav-links">
     <a onclick="go('#/products')">Products</a>
     <a onclick="go('#/dashboard')">Dashboard</a>
@@ -209,104 +180,116 @@ input{
 
 <div id="notifications"></div>
 
-<!-- PAGES -->
+<!-- HOME -->
 <div id="home" class="page active">
-  <h1>Welcome to NeonLoader</h1>
-  <p>Modern, secure loader interface.</p>
+  <h1>Welcome to ArconLoader</h1>
+  <p>Modern loader management interface.</p>
 </div>
 
+<!-- PRODUCTS -->
 <div id="products" class="page">
-  <h1>Products</h1>
+  <h1>Active Products</h1>
   <div class="grid">
-    <div class="card"><h3>Basic</h3><div class="btn">Buy</div></div>
-    <div class="card"><h3>Pro</h3><div class="btn">Buy</div></div>
-    <div class="card"><h3>Elite</h3><div class="btn">Buy</div></div>
+
+    <div class="card">
+      <img src="https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg">
+      <h3>Rust</h3>
+      <div id="rustStatus" class="status">Loading...</div>
+      <div class="btn" onclick="openManage()">🔑 Manage</div>
+    </div>
+
   </div>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dashboard" class="page">
   <h1>Dashboard</h1>
-  <div class="grid">
-    <div class="card">Users: 128</div>
-    <div class="card">Status: Online</div>
-    <div class="card">Version: v1.0.0</div>
-  </div>
+  <p>System overview coming soon.</p>
 </div>
 
+<!-- LOGIN -->
 <div id="login" class="page">
   <div class="login-box">
-    <h2>Authentication Required</h2>
+    <h2>Login</h2>
     <input id="user" placeholder="Username">
     <input id="pass" type="password" placeholder="Password">
     <div class="btn" onclick="login()">Login</div>
   </div>
 </div>
 
+<!-- MODAL -->
+<div id="manageModal" class="modal">
+  <div class="modal-box">
+    <h3>Rust Status</h3>
+    <select id="statusSelect">
+      <option value="online">Online</option>
+      <option value="offline">Offline</option>
+    </select>
+    <div class="btn" onclick="saveStatus()">Save</div>
+  </div>
+</div>
+
 <script>
-/* ===== AUTH ===== */
+const USERS={admin:"neon123"};
+const logged=()=>localStorage.getItem("auth")==="1";
 
-const USERS = {
-  admin: "neon123"
-};
-
-
-const logged = () => localStorage.getItem("auth")==="1";
-
-/* ===== ROUTER ===== */
-window.onload = () => {
-  setTimeout(()=>loader.style.display="none",700);
-  route();
-};
-window.onhashchange = route;
+window.onhashchange=route;
+window.onload=route;
 
 function route(){
-  const r = location.hash || "#/home";
-  const secure = ["#/dashboard","#/products"];
-
-  if(secure.includes(r) && !logged()){
-    notify("Please login first");
+  const r=location.hash||"#/home";
+  if((r==="#/products"||r==="#/dashboard")&&!logged()){
+    notify("Login required");
     return go("#/login");
   }
-
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(r.replace("#/","")).classList.add("active");
+  loadStatus();
 }
 
-function go(p){ location.hash=p; }
+function go(p){location.hash=p}
 
-/* ===== LOGIN ===== */
 function login(){
-  const u = user.value.trim();
-  const p = pass.value.trim();
-
-  if(USERS[u] && USERS[u] === p){
+  if(USERS[user.value]===pass.value){
     localStorage.setItem("auth","1");
-    notify("Access granted");
+    notify("Logged in");
     go("#/dashboard");
-  } else {
-    notify("Invalid credentials");
-  }
+  } else notify("Invalid credentials");
 }
 
 function logout(){
-  if(!logged()) return; // must be logged in to logout
-
+  if(!logged()) return;
   localStorage.removeItem("auth");
   notify("Logged out");
   go("#/home");
 }
 
-/* ===== TOAST ===== */
+function openManage(){
+  if(!logged()) return notify("Login required");
+  manageModal.classList.add("active");
+}
+
+function saveStatus(){
+  localStorage.setItem("rustStatus",statusSelect.value);
+  manageModal.classList.remove("active");
+  loadStatus();
+  notify("Status updated");
+}
+
+function loadStatus(){
+  const s=localStorage.getItem("rustStatus")||"offline";
+  rustStatus.textContent=s==="online"?"Online":"Offline";
+  rustStatus.className="status "+(s==="online"?"green":"red");
+}
+
 function notify(t){
   const d=document.createElement("div");
   d.className="toast";
   d.textContent=t;
   notifications.appendChild(d);
-  setTimeout(()=>d.remove(),3500);
+  setTimeout(()=>d.remove(),3000);
 }
 </script>
 
 </body>
 </html>
-
-
