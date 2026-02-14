@@ -1,1 +1,61 @@
+body{
+  background:#070b12;
+  color:#e8ecff;
+  font-family:Inter,system-ui;
+  margin:0;
+}
 
+nav{
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  background:#0b1020;
+}
+
+button{
+  background:none;
+  border:none;
+  color:#cfd6ff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{
+  color:white;
+  text-shadow:0 0 12px #6f7cff;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:800;
+  color:#27ffd1;
+}
+
+.product-card{
+  background:#0d1320;
+  width:360px;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 0 20px rgba(111,124,255,.3);
+}
+
+.product-image{
+  height:120px;
+  background-size:cover;
+  background-position:center;
+}
+
+.status.active{
+  color:#35ff9b;
+}
+
+.manage{
+  background:#6f7cff;
+  padding:10px 14px;
+  border-radius:8px;
+  color:white;
+}
+
+.glow{
+  box-shadow:0 0 18px rgba(111,124,255,.4);
+}
