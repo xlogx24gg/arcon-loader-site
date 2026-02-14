@@ -5,75 +5,179 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ArconLoader</title>
 <style>
-:root{
-  --bg:#0b0f1a;
-  --panel:#0d1320;
-  --accent1:#00ffd5;
-  --accent2:#6a5cff;
-  --accent3:#8f00ff;
-  --success:#35ff9b;
-  --danger:#ff4d4d;
-  --glow:0 0 20px rgba(111,124,255,.4);
-  --radius:14px;
+:root {
+  --bg: #0b0f1a;
+  --panel: #0d1320;
+  --accent1: #00ffd5;
+  --accent2: #6a5cff;
+  --accent3: #8f00ff;
+  --success: #35ff9b;
+  --danger: #ff4d4d;
+  --text: #e6e9ff;
+  --muted: #9aa0c7;
+  --glow: 0 0 20px rgba(111,124,255,0.5);
+  --radius: 14px;
+  --hover-scale: 1.05;
+  --transition: 0.25s;
 }
 
-*{box-sizing:border-box;font-family:Segoe UI,sans-serif;margin:0;padding:0;}
-body{background:radial-gradient(circle at top,#141a33,var(--bg));color:#e6e9ff;overflow-x:hidden;min-height:100vh;}
+* { box-sizing: border-box; margin:0; padding:0; font-family:'Segoe UI',sans-serif; }
 
-/* NAV */
-nav{
+body {
+  background: radial-gradient(circle at top,#141a33,var(--bg));
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NAVIGATION */
+nav {
+  position: fixed;
+  top:0; left:0; right:0;
+  height: 64px;
   display:flex;
-  justify-content:space-between;
+  justify-content: space-between;
   align-items:center;
-  padding:18px 40px;
-  background:rgba(10,15,30,.85);
-  backdrop-filter:blur(12px);
-  position:fixed;
-  top:0;left:0;right:0;
-  z-index:1000;
+  padding:0 30px;
+  background: rgba(10,15,30,0.85);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
 }
-nav .logo{font-size:22px;font-weight:800;color:var(--accent2);cursor:pointer;}
-nav .nav-links button{
-  background:none;border:none;color:#cfd6ff;font-weight:500;margin-left:20px;cursor:pointer;font-size:16px;
+
+nav .logo {
+  font-size:22px;
+  font-weight:800;
+  color: var(--accent2);
+  cursor: pointer;
+  transition: var(--transition);
 }
-nav .nav-links button:hover{text-shadow:var(--glow);color:white;}
+
+nav .logo:hover { text-shadow: var(--glow); }
+
+.nav-links button {
+  background:none;
+  border:none;
+  color: var(--text);
+  margin-left:20px;
+  font-size:16px;
+  cursor:pointer;
+  transition: var(--transition);
+}
+
+.nav-links button:hover { color:white; text-shadow: var(--glow); transform: scale(var(--hover-scale)); }
 
 /* PAGES */
-.page{display:none;padding:100px 40px 40px;}
-.page.active{display:block;}
+.page { display: none; padding:100px 30px 30px; }
+.page.active { display:block; }
 
-/* HOME */
-.stats{display:flex;flex-wrap:wrap;gap:30px;margin-top:30px;}
-.stat-box{flex:1 1 300px;background:linear-gradient(180deg,#0d1320,#080c15);padding:25px;border-radius:var(--radius);box-shadow:0 0 18px rgba(111,124,255,.3);text-align:center;}
-.stat-box h2{margin-bottom:12px;font-size:20px;}
-.stat-box .big{font-size:48px;font-weight:800;color:var(--accent2);}
-.graph{width:100%;height:150px;background:linear-gradient(to right,var(--accent1),var(--accent2));border-radius:12px;position:relative;overflow:hidden;}
-.graph::after{content:"";position:absolute;top:0;left:0;height:100%;width:30%;background:rgba(255,255,255,0.1);animation:move 2s infinite linear;}
-@keyframes move{0%{left:-30%;}100%{left:100%;}}
+/* HOME PAGE */
+.stats {
+  display:flex;
+  flex-wrap:wrap;
+  gap:30px;
+  margin-top:30px;
+}
+.stat-box {
+  flex:1 1 300px;
+  background: var(--panel);
+  padding:25px;
+  border-radius: var(--radius);
+  text-align:center;
+  box-shadow:0 0 15px rgba(111,124,255,0.2);
+  transition: var(--transition);
+}
+.stat-box:hover { box-shadow: var(--glow); transform: scale(var(--hover-scale)); }
+.stat-box h2 { margin-bottom:12px; font-size:20px; }
+.stat-box .big { font-size:48px; font-weight:800; color: var(--accent2); }
+
+.graph {
+  width:100%;
+  height:150px;
+  background: linear-gradient(to right,var(--accent1),var(--accent2));
+  border-radius: var(--radius);
+  position: relative;
+  overflow:hidden;
+}
+.graph::after {
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  height:100%;
+  width:30%;
+  background: rgba(255,255,255,0.1);
+  animation: move 2s infinite linear;
+}
+@keyframes move { 0%{left:-30%;}100%{left:100%;} }
 
 /* PRODUCTS */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;}
-.card{background:var(--panel);border-radius:var(--radius);overflow:hidden;transition:.25s;box-shadow:0 0 15px rgba(111,124,255,.2);}
-.card:hover{transform:translateY(-4px);box-shadow:var(--glow);}
-.card img{width:100%;height:140px;object-fit:cover;}
-.card-body{padding:20px;display:flex;flex-direction:column;gap:10px;}
-.card h3{margin:0;}
-.status-dot{width:12px;height:12px;border-radius:50%;display:inline-block;}
-.active{background:var(--success);}
-.inactive{background:var(--danger);}
-.manage-btn{background:linear-gradient(135deg,var(--accent2),var(--accent3));border:none;color:white;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;transition:.25s;display:flex;align-items:center;justify-content:center;}
-.manage-btn:hover{box-shadow:var(--glow);transform:scale(1.03);}
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:24px; }
+.card {
+  background: var(--panel);
+  border-radius: var(--radius);
+  overflow:hidden;
+  transition: var(--transition);
+  box-shadow: 0 0 15px rgba(111,124,255,0.2);
+}
+.card:hover { transform: translateY(-5px); box-shadow: var(--glow); }
+.card img { width:100%; height:140px; object-fit:cover; }
+.card-body { padding:20px; display:flex; flex-direction:column; gap:10px; }
+.card-body h3 { margin:0; }
+.status-dot {
+  width:12px; height:12px; border-radius:50%; display:inline-block;
+}
+.active { background: var(--success); }
+.inactive { background: var(--danger); }
+.manage-btn {
+  background: linear-gradient(135deg,var(--accent2),var(--accent3));
+  border:none; color:white; padding:10px; border-radius:10px;
+  font-weight:600; cursor:pointer; display:flex; justify-content:center; align-items:center;
+  transition: var(--transition);
+}
+.manage-btn:hover { box-shadow: var(--glow); transform: scale(var(--hover-scale)); }
 
-/* STATUS */
-.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;}
-.status-box{background:var(--panel);padding:22px;border-radius:var(--radius);border:1px solid rgba(255,255,255,.05);box-shadow:var(--glow);}
-.status-box h3{margin-bottom:8px;}
+/* STATUS PAGE */
+.status-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px; }
+.status-box {
+  background: var(--panel);
+  padding:22px;
+  border-radius: var(--radius);
+  border:1px solid rgba(255,255,255,.05);
+  box-shadow: var(--glow);
+  transition: var(--transition);
+}
+.status-box:hover { transform: scale(var(--hover-scale)); }
 
 /* LOGIN */
-.login-box{max-width:400px;margin:auto;background:var(--panel);padding:32px;border-radius:var(--radius);text-align:center;}
-.login-box input{width:100%;padding:12px;margin:10px 0;border-radius:10px;border:none;background:rgba(0,0,0,.3);color:#e6e9ff;}
-.login-box .btn{margin-top:12px;padding:12px 18px;border-radius:12px;background:linear-gradient(45deg,var(--accent2),var(--accent3));color:#000;font-weight:600;cursor:pointer;transition:.2s;}
-.login-box .btn:hover{box-shadow:var(--glow);transform:scale(1.05);}
+.login-box {
+  max-width:400px; margin:auto;
+  background: var(--panel); padding:32px; border-radius: var(--radius);
+  text-align:center;
+}
+.login-box input {
+  width:100%; padding:12px; margin:10px 0; border-radius:10px; border:none; background: rgba(0,0,0,.3); color: var(--text);
+}
+.login-box .btn {
+  margin-top:12px; padding:12px 18px; border-radius:12px;
+  background: linear-gradient(45deg,var(--accent2),var(--accent3));
+  color:#000; font-weight:600; cursor:pointer; transition: var(--transition);
+}
+.login-box .btn:hover { box-shadow: var(--glow); transform: scale(var(--hover-scale)); }
+
+/* TOAST NOTIFICATIONS */
+.toast {
+  position: fixed;
+  bottom:20px;
+  right:20px;
+  padding:12px 18px;
+  border-radius:10px;
+  background: linear-gradient(45deg,var(--accent2),var(--accent3));
+  color:#000;
+  box-shadow: var(--glow);
+  animation: slideIn 0.4s ease;
+}
+@keyframes slideIn { from { transform: translateX(120%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+
 </style>
 </head>
 <body>
@@ -88,10 +192,10 @@ nav .nav-links button:hover{text-shadow:var(--glow);color:white;}
   </div>
 </nav>
 
-<!-- HOME -->
+<!-- HOME PAGE -->
 <div id="home" class="page active">
   <h1>Welcome to ArconLoader</h1>
-  <p>Your modern loader dashboard. Monitor users, products, and status all in one place.</p>
+  <p>Monitor users, products, and system status in one modern dashboard.</p>
   <div class="stats">
     <div class="stat-box">
       <h2>Active Users</h2>
@@ -108,7 +212,7 @@ nav .nav-links button:hover{text-shadow:var(--glow);color:white;}
   </div>
 </div>
 
-<!-- PRODUCTS -->
+<!-- PRODUCTS PAGE -->
 <div id="products" class="page">
   <h1>Products</h1>
   <div class="grid">
@@ -123,17 +227,17 @@ nav .nav-links button:hover{text-shadow:var(--glow);color:white;}
   </div>
 </div>
 
-<!-- STATUS -->
+<!-- STATUS PAGE -->
 <div id="status" class="page">
   <h1>Status</h1>
   <div class="status-grid">
-    <div class="status-box">Authentication Server — Online</div>
+    <div class="status-box">Auth Server — Online</div>
     <div class="status-box">Loader API — Online</div>
     <div class="status-box">Game Services — Online</div>
   </div>
 </div>
 
-<!-- LOGIN -->
+<!-- LOGIN PAGE -->
 <div id="login" class="page">
   <div class="login-box">
     <h2>Login</h2>
@@ -146,16 +250,35 @@ nav .nav-links button:hover{text-shadow:var(--glow);color:white;}
 
 <script>
 // ===== AUTH =====
-function logged(){return localStorage.getItem('auth')==='true';}
-function requireLogin(page){if(!logged()){showPage('login');notify('Please login first');return;} showPage(page);}
-function login(){const u=document.getElementById('user').value; const p=document.getElementById('pass').value; if(u==='admin'&&p==='neon123'){localStorage.setItem('auth','true');notify('Login successful');showPage('home');}else{notify('Invalid credentials');}}
-function logout(){if(!logged()){notify('Not logged in');return;}localStorage.removeItem('auth');notify('Logged out');showPage('login');}
+function logged(){ return localStorage.getItem('auth')==='true'; }
+function requireLogin(page){
+  if(!logged()){ showPage('login'); notify('Please login first'); return; }
+  showPage(page);
+}
+function login(){
+  const u=document.getElementById('user').value;
+  const p=document.getElementById('pass').value;
+  if(u==='admin' && p==='neon123'){
+    localStorage.setItem('auth','true'); notify('Login successful'); showPage('home');
+  } else notify('Invalid credentials');
+}
+function logout(){
+  if(!logged()){ notify('Not logged in'); return; }
+  localStorage.removeItem('auth'); notify('Logged out'); showPage('login');
+}
 
 // ===== PAGE SWITCH =====
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
 // ===== TOAST =====
-function notify(text){const t=document.createElement('div');t.innerText=text;t.style.position='fixed';t.style.bottom='20px';t.style.right='20px';t.style.padding='12px 18px';t.style.borderRadius='10px';t.style.background='linear-gradient(45deg,var(--accent2),var(--accent3))';t.style.boxShadow='var(--glow)';t.style.color='#000';document.body.appendChild(t);setTimeout(()=>t.remove(),3500);}
+function notify(text){
+  const t=document.createElement('div'); t.className='toast'; t.innerText=text;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
 </script>
 
 </body>
