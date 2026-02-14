@@ -2,157 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ArconLoader</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Firebase -->
+<title>ArconLoader Debug</title>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
-<style>
-:root{
-  --bg:#050812;
-  --panel:#0b1224;
-  --border:#1d2b55;
-  --glow:#4c6fff;
-  --text:#e6ebff;
-  --muted:#9aa6ff;
-}
-*{box-sizing:border-box;font-family:Inter,system-ui;margin:0;padding:0}
-body{
-  background:radial-gradient(circle at top,#0c1430,#050812);
-  background-size:cover;
-  background-attachment: fixed;
-  color:var(--text);
-  user-select:none;
-}
-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 24px;
-}
-.logo{
-  font-weight:800;font-size:22px;cursor:pointer;
-  background: linear-gradient(90deg, #4c6fff, #38ffe0, #b95bff);
-  -webkit-background-clip: text;
-  color: transparent;
-  transition: .3s;
-}
-.logo:hover{ text-shadow:0 0 10px var(--glow); }
-.nav a{ margin-right:16px; cursor:pointer; color:var(--muted); transition:.2s;}
-.nav a:hover{color:#fff;text-shadow:0 0 10px var(--glow);}
-button{
-  background:linear-gradient(90deg, #4c6fff, #38ffe0);
-  border:none;color:#050812;font-weight:600;
-  padding:10px 16px;border-radius:12px;cursor:pointer;transition:.3s;
-  box-shadow:0 0 5px #4c6fff66;
-}
-button:hover{box-shadow:0 0 20px var(--glow); transform:translateY(-2px);}
-
-.page{display:none;padding:24px}
-.page.active{display:block}
-
-.card{
-  background:linear-gradient(180deg,#0d1635,#070b18);
-  border:1px solid var(--border);
-  border-radius:16px;padding:20px;
-  transition:.3s;
-}
-.card:hover{box-shadow:0 0 25px var(--glow);transform: translateY(-2px);}
-
-.stat-box{
-  width:260px;text-align:center;margin:60px auto;
-}
-.stat-number{font-size:42px;font-weight:800;}
-
-.products{ display:flex; gap:20px; flex-wrap:wrap; margin-top:20px; justify-content:center; }
-.product{ width:260px; display:flex; flex-direction:column; align-items:center; transition:.3s; }
-.product img{ width:100%; height:110px; object-fit:contain; border-radius:10px; }
-.status-container{ display:flex; align-items:center; gap:8px; margin:8px 0; }
-.status-dot{ width:12px; height:12px; border-radius:50%; animation:pulse 2.5s infinite; }
-.online{background:#00ff88;}
-.offline{background:#ff4444;}
-@keyframes pulse{0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
-.product button{ width:100%; margin-top:10px; font-weight:600; }
-
-.modal{ position:fixed; inset:0; background:#000a; display:none; align-items:center; justify-content:center; z-index:100; }
-.modal.show{display:flex}
-.modal-box{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px; width:420px; animation:slideUp .3s; }
-@keyframes slideUp{ from{transform:translateY(20px);opacity:0} to{transform:none;opacity:1} }
-.close{ float:right; cursor:pointer; color:#aaa; font-size:18px; }
-.close:hover{ color:#fff; }
-
-footer{ position:fixed; bottom:0; width:100%; text-align:center; padding:14px; color:#5560aa; font-size:12px; background:transparent; }
-
-.status-page .card{ margin-top:20px; }
-
-/* SUBTLE LOADING SPINNER */
-#loadingScreen{
-  position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:9999;
-}
-.spinner{
-  width:40px; height:40px; border:5px solid #4c6fff33;
-  border-top-color:#4c6fff; border-radius:50%;
-  animation:spin 0.6s linear infinite;
-}
-@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-</style>
 </head>
-
 <body>
-<div id="loadingScreen"><div class="spinner"></div></div>
 
-<header>
-  <div class="logo" onclick="switchPage('home')">ArconLoader</div>
-  <div class="nav">
-    <a onclick="switchPage('home')">🏠 Home</a>
-    <a onclick="switchPage('products')">📦 Products</a>
-    <a onclick="switchPage('status')">📡 Status</a>
-  </div>
+<h1>ArconLoader Debug</h1>
+
+<div>
   <button id="logoutBtn" onclick="logout()" disabled>Logout</button>
-</header>
-
-<!-- HOME -->
-<div class="page active" id="home">
-  <div class="card stat-box">
-    <div>Active Users</div>
-    <div class="stat-number" id="users">—</div>
-  </div>
 </div>
 
-<!-- PRODUCTS -->
-<div class="page" id="products">
-  <h2 style="text-align:center">Products</h2>
-  <div class="products">
-    <div class="card product">
-      <img src="https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg">
-      <h3>Rust</h3>
-      <div class="status-container">
-        <div class="status-dot online" id="rustStatus"></div>
-        <span id="rustText">Online</span>
-      </div>
-      <button onclick="openKeys()">Manage 🔑</button>
-    </div>
-  </div>
-</div>
+<h2>Active Users</h2>
+<div id="users">Loading...</div>
 
-<!-- STATUS -->
-<div class="page status-page" id="status">
-  <h2>Status</h2>
-  <div class="card">Auth Server — <span class="status-dot online" id="authDot"></span></div>
-  <div class="card">Loader API — <span class="status-dot online" id="loaderDot"></span></div>
-</div>
+<h2>Keys</h2>
+<div id="keyList">Loading...</div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <span class="close" onclick="closeModal()">✕</span>
-    <h3>Rust Keys</h3>
-    <div id="keyList"></div>
-  </div>
+<h2>Status</h2>
+<div>
+  Rust Status: <span id="rustStatus">?</span>
 </div>
-
-<footer>© 2026 ArconLoader™</footer>
 
 <script>
 const firebaseConfig = {
@@ -167,73 +39,44 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// SUBTLE LOADING
-function switchPage(pageId){
-  const loading = document.getElementById("loadingScreen");
-  loading.style.display="flex";
-  setTimeout(()=>{
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-    loading.style.display="none";
-  }, 400);
-}
-
-// LOGOUT
-function logout(){
-  if(!auth.currentUser) return;
-  auth.signOut().then(()=>{
-    document.getElementById("logoutBtn").disabled=true;
-  }).catch(console.error);
-}
-
-// ENABLE LOGOUT
-auth.onAuthStateChanged(user=>{
+// Enable logout button if user is logged in
+auth.onAuthStateChanged(user => {
   document.getElementById("logoutBtn").disabled = !user;
 });
 
-// ACTIVE USERS
-db.doc("products/rust/stats/global").onSnapshot(doc=>{
+// Logout function
+function logout() {
+  if(!auth.currentUser) { alert("No user logged in"); return; }
+  auth.signOut().then(()=>alert("Logged out")).catch(console.error);
+}
+
+// Active Users from subcollection
+db.collection("products").doc("rust").collection("stats").doc("global").onSnapshot(doc => {
   const data = doc.data();
-  if(data && data.activeUsers !== undefined){
+  console.log("Active Users Data:", data);
+  if(data && data.activeUsers !== undefined) {
     document.getElementById("users").innerText = data.activeUsers;
-  }else{
-    document.getElementById("users").innerText="—";
-    console.log("Active Users missing:", doc.data());
+  } else {
+    document.getElementById("users").innerText = "—";
   }
 });
 
-// RUST STATUS
-db.doc("products/rust").onSnapshot(doc=>{
-  const s = doc.data()?.status || "offline";
-  document.getElementById("rustText").innerText = s.charAt(0).toUpperCase() + s.slice(1);
-  document.getElementById("rustStatus").className = "status-dot "+(s==="online"?"online":"offline");
-});
-
-// STATUS PAGE DOTS (just copy status from Rust)
-db.doc("products/rust").onSnapshot(doc=>{
-  const s = doc.data()?.status || "offline";
-  document.getElementById("authDot").className="status-dot "+(s==="online"?"online":"offline");
-  document.getElementById("loaderDot").className="status-dot "+(s==="online"?"online":"offline");
-});
-
-// KEYS MODAL
-function openKeys(){
+// Keys from subcollection
+db.collection("products").doc("rust").collection("keys").get().then(snapshot => {
   const list = document.getElementById("keyList");
-  list.innerHTML="Loading...";
-  db.collection("products").doc("rust").collection("keys").get().then(q=>{
-    list.innerHTML="";
-    if(q.empty){ list.innerHTML="<div>No keys found</div>"; return; }
-    q.forEach(doc=>{
-      const val = doc.data()?.value || "—";
-      list.innerHTML+=`<div><strong>${doc.id}</strong>: ${val}</div>`;
-    });
-  }).catch(err=>{ console.error(err); list.innerHTML="<div>Error loading keys</div>"; });
-  document.getElementById("modal").classList.add("show");
-}
-function closeModal(){ document.getElementById("modal").classList.remove("show"); }
+  list.innerHTML = "";
+  snapshot.forEach(doc => {
+    const val = doc.data()?.value || "—";
+    list.innerHTML += `<div>${doc.id}: ${val}</div>`;
+  });
+}).catch(console.error);
 
-// HIDE LOADING AFTER PAGE LOAD
-window.onload = ()=>{ setTimeout(()=>document.getElementById("loadingScreen").style.display="none",300); }
+// Rust status
+db.collection("products").doc("rust").onSnapshot(doc => {
+  const status = doc.data()?.status || "offline";
+  document.getElementById("rustStatus").innerText = status;
+});
 </script>
+
 </body>
 </html>
