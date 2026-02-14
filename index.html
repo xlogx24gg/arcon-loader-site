@@ -1,148 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ArconLoader</title>
 
 <style>
 :root{
   --bg:#0b0f1a;
-  --card:#12172a;
-  --accent:#6f7cff;
+  --panel:#0d1320;
+  --accent2:#6a5cff;
+  --accent3:#8f00ff;
+  --green:#35ff9b;
+  --red:#ff4d4d;
   --text:#e6e9ff;
   --muted:#9aa0c7;
-  --glow:0 0 18px rgba(111,124,255,.45);
+  --glow:0 0 20px rgba(111,124,255,.5);
+  --radius:12px;
+  --transition:.25s;
 }
 
-*{box-sizing:border-box}
+*{box-sizing:border-box;font-family:Segoe UI,sans-serif;margin:0}
+
 body{
-  margin:0;
-  font-family:Segoe UI,system-ui;
   background:radial-gradient(circle at top,#141a33,var(--bg));
   color:var(--text);
+  min-height:100vh;
 }
 
+/* NAV */
 nav{
-  position:fixed;
-  top:0;left:0;right:0;
-  height:64px;
+  position:fixed;top:0;left:0;right:0;height:64px;
   background:rgba(10,15,30,.85);
   backdrop-filter:blur(12px);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 24px;
-  z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 30px;z-index:1000;
 }
-
 .logo{
-  font-size:20px;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s;
+  font-size:22px;font-weight:800;cursor:pointer;color:var(--accent2);
 }
-.logo:hover{ text-shadow:var(--glow); }
-
-nav button{
-  background:none;
-  border:none;
-  color:var(--text);
-  margin-left:16px;
-  cursor:pointer;
-  opacity:.8;
+.logo:hover{text-shadow:var(--glow)}
+.nav-links button{
+  background:none;border:none;color:var(--text);
+  margin-left:20px;font-size:16px;cursor:pointer;
 }
-nav button:hover{opacity:1;text-shadow:var(--glow)}
+.nav-links button:hover{text-shadow:var(--glow)}
 
-main{
-  max-width:1100px;
-  margin:110px auto 80px;
-  padding:0 30px;
+/* PAGES */
+.page{display:none;padding:100px 30px 50px}
+.page.active{display:block}
+
+/* WATERMARK */
+.watermark{
+  position:fixed;bottom:10px;left:50%;
+  transform:translateX(-50%);
+  font-size:12px;opacity:.15;
 }
 
-h1{margin-bottom:10px}
+/* HOME */
+.stats{
+  display:flex;gap:20px;flex-wrap:wrap;
+  justify-content:center;margin-top:30px;
+}
+.stat-box{
+  background:var(--panel);width:200px;
+  padding:20px;border-radius:var(--radius);
+  text-align:center;box-shadow:0 0 12px rgba(111,124,255,.2);
+}
+.stat-box .big{font-size:40px;font-weight:800}
 
-.cards{
+/* PRODUCTS */
+.grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:24px;
-  margin-top:30px;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:20px;
 }
-
 .card{
-  background:var(--card);
-  border-radius:14px;
-  padding:22px;
-  position:relative;
-  transition:.25s;
-  border:1px solid rgba(255,255,255,.05);
+  background:var(--panel);
+  border-radius:var(--radius);
+  overflow:hidden;
+  transition:var(--transition);
 }
-.card:hover{
-  transform:translateY(-5px);
-  box-shadow:var(--glow);
-}
-
+.card:hover{box-shadow:var(--glow);transform:translateY(-4px)}
+.card img{width:100%;height:140px;object-fit:cover}
+.card-body{padding:16px}
 .status-dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#2cff8f;
-  display:inline-block;
-  margin-right:8px;
+  width:10px;height:10px;border-radius:50%;
+  display:inline-block;margin-right:6px;
+}
+.manage-btn{
+  margin-top:10px;
+  background:linear-gradient(135deg,var(--accent2),var(--accent3));
+  border:none;color:white;padding:10px;
+  border-radius:10px;cursor:pointer;font-weight:600;
+}
+.manage-btn:hover{box-shadow:var(--glow)}
+
+/* STATUS PAGE */
+.status-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.status-box{
+  background:var(--panel);
+  padding:16px;border-radius:var(--radius);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.flash-dot{
+  width:10px;height:10px;border-radius:50%;
   animation:pulse 5s infinite;
 }
+@keyframes pulse{0%,100%{opacity:.2}50%{opacity:1}}
 
-@keyframes pulse{
-  0%{opacity:.3}
-  50%{opacity:1}
-  100%{opacity:.3}
+/* LOGIN */
+.login-box{
+  max-width:400px;margin:auto;
+  background:var(--panel);padding:28px;
+  border-radius:var(--radius);text-align:center;
 }
-
-.btn{
-  margin-top:14px;
-  padding:10px 16px;
-  background:linear-gradient(45deg,var(--accent),#8f9bff);
-  border-radius:10px;
-  color:#000;
-  font-weight:600;
-  cursor:pointer;
-  border:none;
+.login-box input{
+  width:100%;padding:12px;margin:8px 0;
+  background:rgba(0,0,0,.3);border:none;color:var(--text);
+  border-radius:8px;
 }
-.btn:hover{box-shadow:var(--glow)}
-
-footer{
-  position:fixed;
-  bottom:10px;
-  width:100%;
-  text-align:center;
-  font-size:12px;
-  opacity:.4;
+.login-box .btn{
+  margin-top:12px;
+  padding:12px;border-radius:12px;
+  background:linear-gradient(45deg,var(--accent2),var(--accent3));
+  color:#000;font-weight:600;cursor:pointer;
 }
 
 /* POPUP */
 #popup{
-  position:fixed;
-  inset:0;
+  position:fixed;inset:0;
   background:rgba(0,0,0,.6);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:20;
+  display:none;align-items:center;justify-content:center;
 }
-
 .popup-box{
-  background:var(--card);
-  padding:30px;
-  border-radius:16px;
-  width:420px;
-  max-width:90%;
+  background:var(--panel);
+  padding:26px;border-radius:16px;
+  width:420px;max-width:90%;
+}
+.key-list{
+  margin-top:12px;font-family:monospace;
+  white-space:pre-line;
 }
 
-.key-list{
-  margin-top:14px;
-  font-family:monospace;
-  font-size:14px;
-  line-height:1.6;
+/* TOAST */
+.toast{
+  position:fixed;bottom:20px;right:20px;
+  padding:12px 18px;border-radius:10px;
+  background:linear-gradient(45deg,var(--accent2),var(--accent3));
+  color:#000;box-shadow:var(--glow);
 }
 </style>
 </head>
@@ -150,90 +160,140 @@ footer{
 <body>
 
 <nav>
-  <div class="logo" onclick="location.reload()">ArconLoader</div>
-  <div>
-    <button onclick="openPopup()">Manage</button>
+  <div class="logo" onclick="showPage('home')">ArconLoader</div>
+  <div class="nav-links">
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="requireLogin('products')">📦 Products</button>
+    <button onclick="requireLogin('status')">📊 Status</button>
+    <button onclick="logout()">🚪 Logout</button>
   </div>
 </nav>
 
-<main>
-<h1>Welcome to ArconLoader</h1>
-<p class="muted">Secure loader dashboard powered by Firebase.</p>
-
-<div class="cards">
-  <div class="card">
-    <h2 id="productName">Loading…</h2>
-    <p><span class="status-dot"></span><span id="productStatus">Checking status…</span></p>
-    <button class="btn" onclick="openPopup()">Manage</button>
+<!-- HOME -->
+<div id="home" class="page active">
+  <h1>Welcome to ArconLoader</h1>
+  <p>Modern loader dashboard powered by Firebase.</p>
+  <div class="stats">
+    <div class="stat-box">
+      <h2>Active Users</h2>
+      <span class="big" id="activeUsers">---</span>
+    </div>
   </div>
 </div>
-</main>
 
-<footer>© 2026 ArconLoader™</footer>
+<!-- PRODUCTS -->
+<div id="products" class="page">
+  <h1>Products</h1>
+  <div class="grid">
+    <div class="card">
+      <img src="https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg">
+      <div class="card-body">
+        <h3 id="productName">Loading…</h3>
+        <p><span id="productDot" class="status-dot"></span>
+        <span id="productStatus">Checking…</span></p>
+        <button class="manage-btn" onclick="openPopup()">🔑 Manage</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS -->
+<div id="status" class="page">
+  <h1>Status</h1>
+  <div class="status-grid">
+    <div class="status-box">
+      <span>Rust Loader</span>
+      <span id="statusDot" class="flash-dot"></span>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="page">
+  <div class="login-box">
+    <h2>Login</h2>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <div class="btn" onclick="login()">Login</div>
+    <p style="opacity:.6;margin-top:10px">Demo: admin / neon123</p>
+  </div>
+</div>
+
+<div class="watermark">© 2026 ArconLoader™</div>
 
 <!-- POPUP -->
 <div id="popup">
   <div class="popup-box">
     <h3>Available Keys</h3>
-    <div class="key-list" id="keysBox">Loading…</div>
-    <button class="btn" onclick="closePopup()">Close</button>
+    <div id="keysBox" class="key-list">Loading…</div>
+    <button class="manage-btn" onclick="closePopup()">Close</button>
   </div>
 </div>
 
-<!-- 🔥 FIREBASE -->
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-/* =====================
-   🔧 PASTE YOUR CONFIG
-   ===================== */
-const firebaseConfig = {
-  apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
-  authDomain: "arconloader.firebaseapp.com",
-  projectId: "arconloader",
-  storageBucket: "arconloader.firebasestorage.app",
-  messagingSenderId: "931229254243",
-  appId: "1:931229254243:web:aee9b1fd143cd3976c6e56"
-};
-  
-firebase.initializeApp(firebaseConfig);
+/* AUTH (demo) */
+function logged(){return localStorage.getItem('auth')==='true'}
+function requireLogin(p){if(!logged()){showPage('login');toast('Login required');return}showPage(p)}
+function login(){
+  if(user.value==='admin' && pass.value==='neon123'){
+    localStorage.setItem('auth','true');toast('Logged in');showPage('home')
+  } else toast('Invalid credentials')
+}
+function logout(){
+  if(!logged()){toast('Not logged in');return}
+  localStorage.removeItem('auth');toast('Logged out');showPage('login')
+}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
+  document.getElementById(id).classList.add('active')
+}
+function toast(t){
+  const d=document.createElement('div');d.className='toast';d.innerText=t;
+  document.body.appendChild(d);setTimeout(()=>d.remove(),3000)
+}
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+/* FIREBASE CONFIG (YOURS) */
+firebase.initializeApp({
+  apiKey:"AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
+  authDomain:"arconloader.firebaseapp.com",
+  projectId:"arconloader",
+  storageBucket:"arconloader.firebasestorage.app",
+  messagingSenderId:"931229254243",
+  appId:"1:931229254243:web:aee9b1fd143cd3976c6e56"
+});
+const db=firebase.firestore();
+firebase.auth().signInAnonymously();
 
-auth.signInAnonymously();
-
-/* =====================
-   LOAD PRODUCT
-   ===================== */
-db.collection("products").doc("rust").get().then(doc=>{
-  const data = doc.data();
-  document.getElementById("productName").innerText = data.name;
-  document.getElementById("productStatus").innerText = data.status;
+/* LOAD DATA */
+db.collection("stats").doc("global").get().then(d=>{
+  if(d.exists) activeUsers.innerText=d.data().activeUsers;
 });
 
-/* =====================
-   POPUP / KEYS
-   ===================== */
-function openPopup(){
-  document.getElementById("popup").style.display="flex";
-  const box = document.getElementById("keysBox");
-  box.innerText="Loading…";
+db.collection("products").doc("rust").get().then(d=>{
+  const data=d.data();
+  productName.innerText=data.name;
+  productStatus.innerText=data.status;
+  const color=data.status==="online"?"var(--green)":"var(--red)";
+  productDot.style.background=color;
+  statusDot.style.background=color;
+});
 
-  db.collection("products").doc("rust").collection("keys").get().then(snap=>{
+/* KEYS */
+function openPopup(){
+  popup.style.display='flex';
+  keysBox.innerText='Loading…';
+  db.collection("products").doc("rust").collection("keys").get().then(s=>{
     let out="";
-    snap.forEach(d=>{
-      out += d.data().value + "\n";
-    });
-    box.innerText = out || "No keys available";
+    s.forEach(k=>out+=k.data().value+"\n");
+    keysBox.innerText=out||"No keys available";
   });
 }
-
-function closePopup(){
-  document.getElementById("popup").style.display="none";
-}
+function closePopup(){popup.style.display='none'}
 </script>
 
 </body>
