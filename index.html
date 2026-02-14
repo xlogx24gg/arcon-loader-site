@@ -22,7 +22,10 @@
 *{box-sizing:border-box;font-family:Inter,system-ui;margin:0;padding:0}
 body{
   background:radial-gradient(circle at top,#0c1430,#050812);
+  background-size:cover;
+  background-attachment: fixed;
   color:var(--text);
+  user-select:none; /* prevent copy/paste */
 }
 header{
   display:flex;align-items:center;justify-content:space-between;
@@ -59,7 +62,7 @@ button:hover{box-shadow:0 0 15px var(--glow)}
 .stat-box{
   width:260px;
   text-align:center;
-  margin:40px auto; /* center */
+  margin:60px auto; /* center and down */
 }
 .stat-number{
   font-size:42px;font-weight:800;
@@ -100,6 +103,7 @@ button:hover{box-shadow:0 0 15px var(--glow)}
 .modal{
   position:fixed;inset:0;background:#000a;
   display:none;align-items:center;justify-content:center;
+  z-index:100;
 }
 .modal.show{display:flex}
 .modal-box{
@@ -121,8 +125,15 @@ button:hover{box-shadow:0 0 15px var(--glow)}
 .close:hover{color:#fff}
 
 footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
   text-align:center;padding:14px;
   color:#5560aa;font-size:12px;
+  background:transparent;
+}
+.status-page .card{
+  margin-top:20px;
 }
 </style>
 </head>
@@ -164,11 +175,10 @@ footer{
 </div>
 
 <!-- STATUS -->
-<div class="page" id="status">
+<div class="page status-page" id="status">
   <h2>Status</h2>
-  <div class="card">Auth Server — <span class="status-dot online"></span> Online</div>
-  <br>
-  <div class="card">Loader API — <span class="status-dot online"></span> Online</div>
+  <div class="card">✅ Auth Server — <span class="status-dot online" id="authDot"></span> Online</div>
+  <div class="card">✅ Loader API — <span class="status-dot online" id="loaderDot"></span> Online</div>
 </div>
 
 <!-- MODAL -->
@@ -207,39 +217,51 @@ function logout(){
   auth.signOut().then(()=>document.getElementById("logoutBtn").disabled=true);
 }
 
+// Show logout button only if logged in
+auth.onAuthStateChanged(user=>{
+  document.getElementById("logoutBtn").disabled = !user;
+});
+
+// Active users from Firebase
 db.doc("stats/global").onSnapshot(d=>{
-  document.getElementById("users").innerText=d.data()?.activeUsers || 0;
+  const data = d.data();
+  if(data && data.activeUsers !== undefined){
+    document.getElementById("users").innerText = data.activeUsers;
+  } else {
+    document.getElementById("users").innerText = "—";
+  }
 });
 
+// Rust product status
 db.doc("products/rust").onSnapshot(d=>{
-  const s=d.data()?.status || "offline";
-  document.getElementById("rustText").innerText=s.charAt(0).toUpperCase() + s.slice(1);
-  document.getElementById("rustStatus").className="status-dot "+(s==="online"?"online":"offline");
+  const s = d.data()?.status || "offline";
+  document.getElementById("rustText").innerText = s.charAt(0).toUpperCase() + s.slice(1);
+  document.getElementById("rustStatus").className = "status-dot " + (s==="online"?"online":"offline");
 });
 
+// Load keys modal
 function openKeys(){
-  const list=document.getElementById("keyList");
-  list.innerHTML="Loading...";
+  const list = document.getElementById("keyList");
+  list.innerHTML = "Loading...";
   db.collection("keys").where("product","==","rust").get().then(q=>{
-    list.innerHTML="";
+    list.innerHTML = "";
     if(q.empty){
-      list.innerHTML="<div>No keys found</div>";
+      list.innerHTML = "<div>No keys found</div>";
       return;
     }
     q.forEach(doc=>{
-      list.innerHTML+=`<div>${doc.id}</div>`;
+      list.innerHTML += `<div>${doc.id}</div>`;
     });
+  }).catch(err=>{
+    list.innerHTML = `<div>Error loading keys</div>`;
+    console.error(err);
   });
   document.getElementById("modal").classList.add("show");
 }
+
 function closeModal(){
   document.getElementById("modal").classList.remove("show");
 }
-
-// Enable logout button when logged in
-auth.onAuthStateChanged(user=>{
-  document.getElementById("logoutBtn").disabled=!user;
-});
 </script>
 
 </body>
