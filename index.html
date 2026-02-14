@@ -1,238 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <title>ArconLoader</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-:root{
-  --bg:#070b12;
-  --panel:#0d1320;
-  --accent:#6f7cff;
-  --accent2:#27ffd1;
-  --danger:#ff4d4d;
-  --success:#35ff9b;
-  --glow:0 0 25px rgba(111,124,255,.4);
-  --radius:14px;
-}
-
-*{box-sizing:border-box;font-family:Inter,Segoe UI,system-ui}
-
-body{
-  margin:0;
-  background:radial-gradient(circle at top,#0b1224,#05070c);
-  color:#e8ecff;
-}
-
-/* NAV */
-nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:18px 40px;
-  background:rgba(10,15,30,.7);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-
-.logo{
-  font-size:22px;
-  font-weight:800;
-  letter-spacing:.5px;
-  color:var(--accent2);
-}
-
-nav a{
-  color:#cfd6ff;
-  text-decoration:none;
-  margin-left:26px;
-  font-weight:500;
-}
-
-nav a:hover{
-  color:white;
-  text-shadow:var(--glow);
-}
-
-/* PAGE */
-main{
-  max-width:1200px;
-  margin:50px auto;
-  padding:0 30px;
-}
-
-h1{
-  font-size:32px;
-  margin-bottom:25px;
-}
-
-/* PRODUCT CARD */
-.product{
-  background:linear-gradient(180deg,#0d1320,#080c15);
-  border-radius:var(--radius);
-  overflow:hidden;
-  margin-bottom:26px;
-  border:1px solid rgba(255,255,255,.05);
-  transition:.25s;
-}
-
-.product:hover{
-  box-shadow:var(--glow);
-  transform:translateY(-2px);
-}
-
-.product-header{
-  height:120px;
-  background-size:cover;
-  background-position:center;
-  position:relative;
-}
-
-.product-header::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.1),#0b1020);
-}
-
-.product-body{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:22px 26px;
-}
-
-.product-info h2{
-  margin:0;
-  font-size:22px;
-}
-
-.product-info p{
-  margin:6px 0 0;
-  opacity:.7;
-  font-size:14px;
-}
-
-/* STATUS */
-.status{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:600;
-}
-
-.dot{
-  width:12px;
-  height:12px;
-  border-radius:50%;
-}
-
-.active{background:var(--success);box-shadow:0 0 10px var(--success)}
-.inactive{background:var(--danger);box-shadow:0 0 10px var(--danger)}
-
-/* MANAGE BUTTON */
-.manage{
-  background:linear-gradient(135deg,var(--accent),#5a67ff);
-  border:none;
-  color:white;
-  padding:12px 18px;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  transition:.25s;
-}
-
-.manage:hover{
-  box-shadow:var(--glow);
-  transform:scale(1.03);
-}
-
-/* STATUS PAGE BOX (unchanged style) */
-.status-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:22px;
-}
-
-.status-box{
-  background:var(--panel);
-  padding:22px;
-  border-radius:var(--radius);
-  border:1px solid rgba(255,255,255,.05);
-}
-
-.status-box h3{
-  margin:0 0 8px;
-}
-
-footer{
-  opacity:.4;
-  text-align:center;
-  padding:30px;
-}
-</style>
+<link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
 </head>
 
-<body>
+<body onload="requireAuth()">
 
 <nav>
-  <div class="logo">ArconLoader</div>
+  <button class="logo" onclick="location.href='index.html'">ArconLoader</button>
   <div>
-    <a href="#">🏠 Home</a>
-    <a href="#">📦 Products</a>
-    <a href="#">📊 Status</a>
-    <a href="#">🚪 Logout</a>
+    <button onclick="location.href='index.html'">🏠 Home</button>
+    <button onclick="location.href='products.html'">📦 Products</button>
+    <button onclick="location.href='status.html'">📊 Status</button>
+    <button onclick="logout()">🚪 Logout</button>
   </div>
 </nav>
 
 <main>
+  <h1>Welcome to ArconLoader</h1>
 
-<h1>Products</h1>
-
-<!-- PRODUCT -->
-<div class="product">
-  <div class="product-header" style="background-image:url('https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg')"></div>
-  <div class="product-body">
-    <div class="product-info">
-      <h2>Rust</h2>
-      <p>ArconLoader • Game Module</p>
+  <div class="stats">
+    <div class="stat-box">
+      <h2>Active Users</h2>
+      <span class="big">1000</span>
     </div>
 
-    <div class="status">
-      <div class="dot active"></div>
-      Active
+    <div class="stat-box">
+      <h2>Loader Activity</h2>
+      <div class="graph"></div>
     </div>
-
-    <button class="manage">🔑 Manage</button>
   </div>
-</div>
-
-<h1>Status</h1>
-
-<div class="status-grid">
-  <div class="status-box">
-    <h3>Authentication</h3>
-    <p>Status: Online</p>
-  </div>
-  <div class="status-box">
-    <h3>Loader API</h3>
-    <p>Status: Online</p>
-  </div>
-  <div class="status-box">
-    <h3>Game Services</h3>
-    <p>Status: Online</p>
-  </div>
-</div>
-
 </main>
-
-<footer>
-© 2026 ArconLoader
-</footer>
 
 </body>
 </html>
