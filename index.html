@@ -1,219 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeonLoader</title>
-  <style>
-    :root {
-      --bg: #0b0f1a;
-      --card: rgba(255,255,255,0.06);
-      --accent1: #00ffd5;
-      --accent2: #6a5cff;
-      --accent3: #8f00ff;
-      --text: #e6e9ff;
-      --muted: #9aa0c7;
-      --glow: 0 0 20px rgba(0,255,213,0.6);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeonLoader</title>
 
-    * { box-sizing: border-box; }
+<style>
+:root {
+  --bg:#0b0f1a;
+  --card:rgba(255,255,255,0.06);
+  --accent1:#00ffd5;
+  --accent2:#6a5cff;
+  --accent3:#8f00ff;
+  --text:#e6e9ff;
+  --muted:#9aa0c7;
+  --glow:0 0 20px rgba(0,255,213,.6);
+}
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: radial-gradient(circle at top, #141a33, var(--bg));
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+*{box-sizing:border-box}
 
-    a { color: inherit; text-decoration: none; }
+body{
+  margin:0;
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:radial-gradient(circle at top,#141a33,var(--bg));
+  color:var(--text);
+  min-height:100vh;
+}
 
-    /* ===== LOADER ===== */
-    #loader {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
+a{text-decoration:none;color:inherit}
 
-    .spinner {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 4px solid rgba(255,255,255,0.1);
-      border-top: 4px solid var(--accent1);
-      animation: spin 1s linear infinite;
-      box-shadow: var(--glow);
-    }
+/* ===== LOADER ===== */
+#loader{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+.spinner{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  border:4px solid rgba(255,255,255,.1);
+  border-top:4px solid var(--accent1);
+  animation:spin 1s linear infinite;
+  box-shadow:var(--glow);
+}
 
-    /* ===== NAV ===== */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 64px;
-      background: rgba(10,15,30,0.75);
-      backdrop-filter: blur(14px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 100;
-    }
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    .logo {
-      font-weight: 700;
-      letter-spacing: 1px;
-      background: linear-gradient(45deg, var(--accent1), var(--accent2), var(--accent3));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+/* ===== NAV ===== */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:64px;
+  background:rgba(10,15,30,.75);
+  backdrop-filter:blur(14px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  z-index:100;
+}
 
-    .nav-links a {
-      margin-left: 20px;
-      opacity: 0.85;
-      transition: 0.2s;
-    }
+/* LOGO SHINE */
+.logo{
+  font-weight:700;
+  letter-spacing:1px;
+  background:linear-gradient(45deg,var(--accent1),var(--accent2),var(--accent3));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  position:relative;
+  cursor:pointer;
+}
 
-    .nav-links a:hover {
-      opacity: 1;
-      text-shadow: var(--glow);
-    }
+.logo::after{
+  content:"";
+  position:absolute;
+  inset:-10px;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
+  transform:translateX(-120%);
+  opacity:0;
+}
 
-    /* ===== PAGES ===== */
-    .page {
-      display: none;
-      padding: 120px 40px 40px;
-      max-width: 1200px;
-      margin: auto;
-    }
+.logo:hover{
+  text-shadow:0 0 25px rgba(140,255,255,.9);
+}
 
-    .page.active { display: block; }
+.logo:hover::after{
+  animation:shine 1s ease forwards;
+  opacity:1;
+}
 
-    /* ===== CARDS ===== */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-    }
+@keyframes shine{
+  to{transform:translateX(120%)}
+}
 
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 24px;
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: 0.25s ease;
-      position: relative;
-      overflow: hidden;
-    }
+.nav-links a{
+  margin-left:20px;
+  opacity:.85;
+  transition:.2s;
+}
 
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
-      opacity: 0;
-      transition: 0.25s;
-    }
+.nav-links a:hover{
+  opacity:1;
+  text-shadow:var(--glow);
+}
 
-    .card:hover {
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 0 0 30px rgba(106,92,255,0.35);
-    }
+/* ===== PAGES ===== */
+.page{
+  display:none;
+  padding:120px 40px 40px;
+  max-width:1200px;
+  margin:auto;
+}
 
-    .card:hover::before { opacity: 1; }
+.page.active{display:block}
 
-    /* ===== BUTTON ===== */
-    .btn {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 12px 18px;
-      border-radius: 12px;
-      background: linear-gradient(45deg, var(--accent1), var(--accent2));
-      color: #000;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+/* ===== CARDS ===== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+}
 
-    .btn:hover { box-shadow: var(--glow); transform: scale(1.05); }
+.card{
+  background:var(--card);
+  border-radius:16px;
+  padding:24px;
+  border:1px solid rgba(255,255,255,.08);
+  transition:.25s;
+  position:relative;
+  overflow:hidden;
+}
 
-    /* ===== LOGIN ===== */
-    .login-box {
-      max-width: 400px;
-      margin: auto;
-      background: var(--card);
-      padding: 32px;
-      border-radius: 20px;
-      text-align: center;
-    }
+.card:hover{
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:0 0 30px rgba(106,92,255,.35);
+}
 
-    input {
-      width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      background: rgba(0,0,0,0.3);
-      color: var(--text);
-    }
+/* ===== BUTTON ===== */
+.btn{
+  margin-top:12px;
+  padding:12px 18px;
+  border-radius:12px;
+  background:linear-gradient(45deg,var(--accent1),var(--accent2));
+  color:#000;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+  display:inline-block;
+}
 
-    /* ===== NOTIFICATIONS ===== */
-    #notifications {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 200;
-    }
+.btn:hover{
+  box-shadow:var(--glow);
+  transform:scale(1.05);
+}
 
-    .toast {
-      background: linear-gradient(45deg, var(--accent2), var(--accent3));
-      padding: 14px 18px;
-      border-radius: 12px;
-      box-shadow: var(--glow);
-      animation: slideIn 0.4s ease;
-    }
+/* ===== LOGIN ===== */
+.login-box{
+  max-width:400px;
+  margin:auto;
+  background:var(--card);
+  padding:32px;
+  border-radius:20px;
+  text-align:center;
+}
 
-    @keyframes slideIn {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
+input{
+  width:100%;
+  margin:10px 0;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  background:rgba(0,0,0,.3);
+  color:var(--text);
+}
 
-  </style>
+/* ===== NOTIFICATIONS ===== */
+#notifications{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:200;
+}
+
+.toast{
+  background:linear-gradient(45deg,var(--accent2),var(--accent3));
+  padding:14px 18px;
+  border-radius:12px;
+  box-shadow:var(--glow);
+  animation:slideIn .4s ease;
+}
+
+@keyframes slideIn{
+  from{transform:translateX(120%);opacity:0}
+  to{transform:translateX(0);opacity:1}
+}
+</style>
 </head>
+
 <body>
 
 <div id="loader"><div class="spinner"></div></div>
 
 <nav>
-  <div class="logo">NeonLoader</div>
-  <div class="nav-links">
-    <a href="#" onclick="showPage('home')">Home</a>
-    <a href="#" onclick="showPage('products')">Products</a>
-    <a href="#" onclick="showPage('dashboard')">Dashboard</a>
-    <a href="#" onclick="showPage('login')">Login</a>
-  </div>
+  <div class="logo" onclick="goHome()">NeonLoader</div>
+  <div class="nav-links" id="navLinks"></div>
 </nav>
 
 <div id="notifications"></div>
 
-<!-- HOME -->
 <div id="home" class="page active">
   <h1>Welcome to NeonLoader</h1>
   <p class="muted">A modern, reactive loader-style website.</p>
 </div>
 
-<!-- PRODUCTS -->
 <div id="products" class="page">
   <h1>Products</h1>
   <div class="grid">
@@ -223,7 +231,6 @@
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" class="page">
   <h1>Dashboard</h1>
   <div class="grid">
@@ -233,46 +240,87 @@
   </div>
 </div>
 
-<!-- LOGIN -->
 <div id="login" class="page">
   <div class="login-box">
     <h2>Login</h2>
     <input id="user" placeholder="Username">
     <input id="pass" type="password" placeholder="Password">
     <div class="btn" onclick="login()">Login</div>
-    <p style="margin-top:10px; font-size:13px; opacity:0.7;">Demo Login: admin / neon123</p>
+    <p style="opacity:.6;font-size:13px">admin / neon123</p>
   </div>
 </div>
 
 <script>
-  // Loader
-  window.addEventListener('load', () => {
-    setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
-  });
+const USERS = {
+  admin: "a3c9e3fdc47b2d9d1f2b90b61f7f5a2b"
+};
 
-  function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+function hash(str){
+  let h=0;
+  for(let i=0;i<str.length;i++){
+    h=(h<<5)-h+str.charCodeAt(i);
+    h|=0;
   }
+  return Math.abs(h).toString(16);
+}
 
-  function notify(text) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerText = text;
-    document.getElementById('notifications').appendChild(toast);
-    setTimeout(() => toast.remove(), 3500);
-  }
+const isLoggedIn=()=>localStorage.getItem("loggedIn")==="true";
 
-  function login() {
-    const u = document.getElementById('user').value;
-    const p = document.getElementById('pass').value;
-    if (u === 'admin' && p === 'neon123') {
-      notify('Login successful');
-      showPage('dashboard');
-    } else {
-      notify('Invalid login');
-    }
+window.addEventListener("load",()=>{
+  setTimeout(()=>loader.style.display="none",800);
+  updateNav();
+});
+
+function showPage(id,secure=false){
+  if(secure && !isLoggedIn()){
+    notify("Please login first");
+    return showPage("login");
   }
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function login(){
+  const u=user.value.trim();
+  const p=hash(pass.value.trim());
+  if(USERS[u]===p){
+    localStorage.setItem("loggedIn","true");
+    notify("Login successful");
+    updateNav();
+    showPage("dashboard",true);
+  } else notify("Invalid credentials");
+}
+
+function logout(){
+  localStorage.clear();
+  notify("Logged out");
+  updateNav();
+  showPage("home");
+}
+
+function updateNav(){
+  navLinks.innerHTML=isLoggedIn()?
+  `
+  <a onclick="showPage('home')">Home</a>
+  <a onclick="showPage('products',true)">Products</a>
+  <a onclick="showPage('dashboard',true)">Dashboard</a>
+  <a onclick="logout()">Logout</a>
+  `:
+  `
+  <a onclick="showPage('home')">Home</a>
+  <a onclick="showPage('login')">Login</a>
+  `;
+}
+
+function notify(t){
+  const d=document.createElement("div");
+  d.className="toast";
+  d.textContent=t;
+  notifications.appendChild(d);
+  setTimeout(()=>d.remove(),3500);
+}
+
+function goHome(){showPage("home")}
 </script>
 
 </body>
