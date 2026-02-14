@@ -77,8 +77,8 @@ button:hover{box-shadow:0 0 20px var(--glow); transform:translateY(-2px);}
 
 .modal{ position:fixed; inset:0; background:#000a; display:none; align-items:center; justify-content:center; z-index:100; }
 .modal.show{display:flex}
-.modal-box{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px; width:420px; animation:slideUp .4s; }
-@keyframes slideUp{ from{transform:translateY(40px);opacity:0} to{transform:none;opacity:1} }
+.modal-box{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px; width:420px; animation:slideUp .3s; }
+@keyframes slideUp{ from{transform:translateY(20px);opacity:0} to{transform:none;opacity:1} }
 .close{ float:right; cursor:pointer; color:#aaa; font-size:18px; }
 .close:hover{ color:#fff; }
 
@@ -86,26 +86,24 @@ footer{ position:fixed; bottom:0; width:100%; text-align:center; padding:14px; c
 
 .status-page .card{ margin-top:20px; }
 
-/* LOADING SCREEN */
+/* SUBTLE LOADING SPINNER */
 #loadingScreen{
-  position:fixed; inset:0; background:#000c; display:flex;
-  align-items:center; justify-content:center; z-index:9999;
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:9999;
 }
 .spinner{
-  width:50px; height:50px; border:6px solid #4c6fff33;
+  width:40px; height:40px; border:5px solid #4c6fff33;
   border-top-color:#4c6fff; border-radius:50%;
-  animation:spin 1s linear infinite;
+  animation:spin 0.6s linear infinite;
 }
-@keyframes spin{ 0%{transform:rotate(0deg);}100%{transform:rotate(360deg);} }
+@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 </style>
 </head>
 
 <body>
-
 <div id="loadingScreen"><div class="spinner"></div></div>
 
 <header>
-  <div class="logo" onclick="go('home')">ArconLoader</div>
+  <div class="logo" onclick="switchPage('home')">ArconLoader</div>
   <div class="nav">
     <a onclick="switchPage('home')">🏠 Home</a>
     <a onclick="switchPage('products')">📦 Products</a>
@@ -141,8 +139,8 @@ footer{ position:fixed; bottom:0; width:100%; text-align:center; padding:14px; c
 <!-- STATUS -->
 <div class="page status-page" id="status">
   <h2>Status</h2>
-  <div class="card">Auth Server — <span class="status-dot online" id="authDot"></span> Online</div>
-  <div class="card">Loader API — <span class="status-dot online" id="loaderDot"></span> Online</div>
+  <div class="card">Auth Server — <span class="status-dot online" id="authDot"></span></div>
+  <div class="card">Loader API — <span class="status-dot online" id="loaderDot"></span></div>
 </div>
 
 <!-- MODAL -->
@@ -157,7 +155,6 @@ footer{ position:fixed; bottom:0; width:100%; text-align:center; padding:14px; c
 <footer>© 2026 ArconLoader™</footer>
 
 <script>
-// FIREBASE INIT
 const firebaseConfig = {
   apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
   authDomain: "arconloader.firebaseapp.com",
@@ -170,56 +167,53 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// PAGE LOADING
+// SUBTLE LOADING
 function switchPage(pageId){
-  document.getElementById("loadingScreen").style.display="flex";
+  const loading = document.getElementById("loadingScreen");
+  loading.style.display="flex";
   setTimeout(()=>{
-    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
-    document.getElementById("loadingScreen").style.display="none";
-  }, 500);
+    loading.style.display="none";
+  }, 400);
 }
 
 // LOGOUT
 function logout(){
   if(!auth.currentUser) return;
-  auth.signOut().then(()=>{ 
-    document.getElementById("logoutBtn").disabled = true;
-    alert("Logged out");
-  }).catch(err=>{ console.error(err); alert("Logout failed"); });
+  auth.signOut().then(()=>{
+    document.getElementById("logoutBtn").disabled=true;
+  }).catch(console.error);
 }
 
-// Enable logout button
+// ENABLE LOGOUT
 auth.onAuthStateChanged(user=>{
   document.getElementById("logoutBtn").disabled = !user;
 });
 
 // ACTIVE USERS
-db.doc("stats/global").onSnapshot(d=>{
-  const data = d.data();
+db.doc("products/rust/stats/global").onSnapshot(doc=>{
+  const data = doc.data();
   if(data && data.activeUsers !== undefined){
     document.getElementById("users").innerText = data.activeUsers;
-    console.log("Active Users:", data.activeUsers);
   }else{
     document.getElementById("users").innerText="—";
-    console.log("Active Users data missing", d.data());
+    console.log("Active Users missing:", doc.data());
   }
 });
 
 // RUST STATUS
-db.doc("products/rust").onSnapshot(d=>{
-  const s = d.data()?.status || "offline";
-  document.getElementById("rustText").innerText = s.charAt(0).toUpperCase()+s.slice(1);
+db.doc("products/rust").onSnapshot(doc=>{
+  const s = doc.data()?.status || "offline";
+  document.getElementById("rustText").innerText = s.charAt(0).toUpperCase() + s.slice(1);
   document.getElementById("rustStatus").className = "status-dot "+(s==="online"?"online":"offline");
 });
 
-// STATUS PAGE DOTS (blink like products)
-db.doc("status/servers").onSnapshot(d=>{
-  const servers = d.data();
-  if(servers?.authOnline) document.getElementById("authDot").className = "status-dot online";
-  else document.getElementById("authDot").className="status-dot offline";
-  if(servers?.loaderOnline) document.getElementById("loaderDot").className = "status-dot online";
-  else document.getElementById("loaderDot").className="status-dot offline";
+// STATUS PAGE DOTS (just copy status from Rust)
+db.doc("products/rust").onSnapshot(doc=>{
+  const s = doc.data()?.status || "offline";
+  document.getElementById("authDot").className="status-dot "+(s==="online"?"online":"offline");
+  document.getElementById("loaderDot").className="status-dot "+(s==="online"?"online":"offline");
 });
 
 // KEYS MODAL
@@ -238,7 +232,8 @@ function openKeys(){
 }
 function closeModal(){ document.getElementById("modal").classList.remove("show"); }
 
-window.onload = ()=>{ setTimeout(()=>{document.getElementById("loadingScreen").style.display="none"},500); }
+// HIDE LOADING AFTER PAGE LOAD
+window.onload = ()=>{ setTimeout(()=>document.getElementById("loadingScreen").style.display="none",300); }
 </script>
 </body>
 </html>
