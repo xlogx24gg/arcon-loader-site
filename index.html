@@ -1,1 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArconLoader</title>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --panel:#0d1320;
+  --accent1:#00ffd5;
+  --accent2:#6a5cff;
+  --accent3:#8f00ff;
+  --success:#35ff9b;
+  --danger:#ff4d4d;
+  --glow:0 0 20px rgba(111,124,255,.4);
+  --radius:14px;
+}
 
+*{box-sizing:border-box;font-family:Segoe UI,sans-serif;margin:0;padding:0;}
+body{background:radial-gradient(circle at top,#141a33,var(--bg));color:#e6e9ff;overflow-x:hidden;min-height:100vh;}
+
+/* NAV */
+nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 40px;
+  background:rgba(10,15,30,.85);
+  backdrop-filter:blur(12px);
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:1000;
+}
+nav .logo{font-size:22px;font-weight:800;color:var(--accent2);cursor:pointer;}
+nav .nav-links button{
+  background:none;border:none;color:#cfd6ff;font-weight:500;margin-left:20px;cursor:pointer;font-size:16px;
+}
+nav .nav-links button:hover{text-shadow:var(--glow);color:white;}
+
+/* PAGES */
+.page{display:none;padding:100px 40px 40px;}
+.page.active{display:block;}
+
+/* HOME */
+.stats{display:flex;flex-wrap:wrap;gap:30px;margin-top:30px;}
+.stat-box{flex:1 1 300px;background:linear-gradient(180deg,#0d1320,#080c15);padding:25px;border-radius:var(--radius);box-shadow:0 0 18px rgba(111,124,255,.3);text-align:center;}
+.stat-box h2{margin-bottom:12px;font-size:20px;}
+.stat-box .big{font-size:48px;font-weight:800;color:var(--accent2);}
+.graph{width:100%;height:150px;background:linear-gradient(to right,var(--accent1),var(--accent2));border-radius:12px;position:relative;overflow:hidden;}
+.graph::after{content:"";position:absolute;top:0;left:0;height:100%;width:30%;background:rgba(255,255,255,0.1);animation:move 2s infinite linear;}
+@keyframes move{0%{left:-30%;}100%{left:100%;}}
+
+/* PRODUCTS */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;}
+.card{background:var(--panel);border-radius:var(--radius);overflow:hidden;transition:.25s;box-shadow:0 0 15px rgba(111,124,255,.2);}
+.card:hover{transform:translateY(-4px);box-shadow:var(--glow);}
+.card img{width:100%;height:140px;object-fit:cover;}
+.card-body{padding:20px;display:flex;flex-direction:column;gap:10px;}
+.card h3{margin:0;}
+.status-dot{width:12px;height:12px;border-radius:50%;display:inline-block;}
+.active{background:var(--success);}
+.inactive{background:var(--danger);}
+.manage-btn{background:linear-gradient(135deg,var(--accent2),var(--accent3));border:none;color:white;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;transition:.25s;display:flex;align-items:center;justify-content:center;}
+.manage-btn:hover{box-shadow:var(--glow);transform:scale(1.03);}
+
+/* STATUS */
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;}
+.status-box{background:var(--panel);padding:22px;border-radius:var(--radius);border:1px solid rgba(255,255,255,.05);box-shadow:var(--glow);}
+.status-box h3{margin-bottom:8px;}
+
+/* LOGIN */
+.login-box{max-width:400px;margin:auto;background:var(--panel);padding:32px;border-radius:var(--radius);text-align:center;}
+.login-box input{width:100%;padding:12px;margin:10px 0;border-radius:10px;border:none;background:rgba(0,0,0,.3);color:#e6e9ff;}
+.login-box .btn{margin-top:12px;padding:12px 18px;border-radius:12px;background:linear-gradient(45deg,var(--accent2),var(--accent3));color:#000;font-weight:600;cursor:pointer;transition:.2s;}
+.login-box .btn:hover{box-shadow:var(--glow);transform:scale(1.05);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="showPage('home')">ArconLoader</div>
+  <div class="nav-links">
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="requireLogin('products')">📦 Products</button>
+    <button onclick="requireLogin('status')">📊 Status</button>
+    <button onclick="logout()">🚪 Logout</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <h1>Welcome to ArconLoader</h1>
+  <p>Your modern loader dashboard. Monitor users, products, and status all in one place.</p>
+  <div class="stats">
+    <div class="stat-box">
+      <h2>Active Users</h2>
+      <span class="big">1000</span>
+    </div>
+    <div class="stat-box">
+      <h2>Loader Activity</h2>
+      <div class="graph"></div>
+    </div>
+    <div class="stat-box">
+      <h2>System Status</h2>
+      <p>All services operational</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div id="products" class="page">
+  <h1>Products</h1>
+  <div class="grid">
+    <div class="card">
+      <img src="https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg" alt="Rust">
+      <div class="card-body">
+        <h3>Rust</h3>
+        <span class="status-dot active"></span> Active
+        <button class="manage-btn">🔑 Manage</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS -->
+<div id="status" class="page">
+  <h1>Status</h1>
+  <div class="status-grid">
+    <div class="status-box">Authentication Server — Online</div>
+    <div class="status-box">Loader API — Online</div>
+    <div class="status-box">Game Services — Online</div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="page">
+  <div class="login-box">
+    <h2>Login</h2>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <div class="btn" onclick="login()">Login</div>
+    <p style="margin-top:10px;font-size:13px;opacity:0.7;">Demo: admin / neon123</p>
+  </div>
+</div>
+
+<script>
+// ===== AUTH =====
+function logged(){return localStorage.getItem('auth')==='true';}
+function requireLogin(page){if(!logged()){showPage('login');notify('Please login first');return;} showPage(page);}
+function login(){const u=document.getElementById('user').value; const p=document.getElementById('pass').value; if(u==='admin'&&p==='neon123'){localStorage.setItem('auth','true');notify('Login successful');showPage('home');}else{notify('Invalid credentials');}}
+function logout(){if(!logged()){notify('Not logged in');return;}localStorage.removeItem('auth');notify('Logged out');showPage('login');}
+
+// ===== PAGE SWITCH =====
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+// ===== TOAST =====
+function notify(text){const t=document.createElement('div');t.innerText=text;t.style.position='fixed';t.style.bottom='20px';t.style.right='20px';t.style.padding='12px 18px';t.style.borderRadius='10px';t.style.background='linear-gradient(45deg,var(--accent2),var(--accent3))';t.style.boxShadow='var(--glow)';t.style.color='#000';document.body.appendChild(t);setTimeout(()=>t.remove(),3500);}
+</script>
+
+</body>
+</html>
