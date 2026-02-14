@@ -6,7 +6,11 @@
 <script src="auth.js"></script>
 </head>
 
-<body onload="requireAuth()">
+function requireAuth(redirectIfNotLoggedIn = true){
+  if(!logged() && redirectIfNotLoggedIn){
+    window.location.href = "login.html";
+  }
+}
 
 <nav>
   <button class="logo" onclick="location.href='index.html'">ArconLoader</button>
@@ -36,3 +40,4 @@
 
 </body>
 </html>
+
