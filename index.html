@@ -200,7 +200,20 @@ button:hover{box-shadow:0 0 15px var(--glow);}
     <input type="email" id="loginEmail" placeholder="Email">
     <input type="password" id="loginPass" placeholder="Password">
     <button onclick="login()">Sign In</button>
+    <button onclick="showRegister()">Create Account</button>
     <button onclick="go('home')">Cancel</button>
+  </div>
+</div>
+
+  <!-- REGISTER PAGE -->
+<div class="page" id="registerPage">
+  <div class="login-page">
+    <h2>Create Account</h2>
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPass" placeholder="Password">
+    <input type="password" id="regPassConfirm" placeholder="Confirm Password">
+    <button onclick="register()">Register</button>
+    <button onclick="go('loginPage')">Back to Sign In</button>
   </div>
 </div>
 
@@ -304,6 +317,38 @@ function login(){
       .then(()=>go('home'))
       .catch(err=>alert(err.message));
 }
+
+  // Show registration page
+function showRegister(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('registerPage').classList.add('active');
+}
+
+// Register new user
+function register(){
+  const email = document.getElementById('regEmail').value;
+  const pass = document.getElementById('regPass').value;
+  const confirm = document.getElementById('regPassConfirm').value;
+
+  if(!email || !pass || !confirm){
+    alert("All fields are required!");
+    return;
+  }
+  if(pass !== confirm){
+    alert("Passwords do not match!");
+    return;
+  }
+
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(userCredential => {
+      alert("Account created successfully! You are now signed in.");
+      go('home');
+    })
+    .catch(error => {
+      alert("Error: " + error.message);
+    });
+}
 </script>
 </body>
 </html>
+
