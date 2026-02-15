@@ -9,11 +9,14 @@
 </head>
 <body>
 
-<h1>ArconLoader Debug</h1>
+<h1>ArconLoader Debug Page</h1>
 
 <div>
   <button id="logoutBtn" onclick="logout()" disabled>Logout</button>
 </div>
+
+<h2>Status</h2>
+<div>Rust Status: <span id="rustStatus">?</span></div>
 
 <h2>Active Users</h2>
 <div id="users">Loading...</div>
@@ -21,12 +24,8 @@
 <h2>Keys</h2>
 <div id="keyList">Loading...</div>
 
-<h2>Status</h2>
-<div>
-  Rust Status: <span id="rustStatus">?</span>
-</div>
-
 <script>
+// Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
   authDomain: "arconloader.firebaseapp.com",
@@ -39,44 +38,67 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// Enable logout button if user is logged in
+// Enable logout button if logged in
 auth.onAuthStateChanged(user => {
   document.getElementById("logoutBtn").disabled = !user;
+  console.log("User state changed:", user);
 });
 
 // Logout function
 function logout() {
   if(!auth.currentUser) { alert("No user logged in"); return; }
-  auth.signOut().then(()=>alert("Logged out")).catch(console.error);
+  auth.signOut()
+    .then(()=>alert("Logged out"))
+    .catch(err => console.error("Logout error:", err));
 }
 
-// Active Users from subcollection
-db.collection("products").doc("rust").collection("stats").doc("global").onSnapshot(doc => {
-  const data = doc.data();
-  console.log("Active Users Data:", data);
-  if(data && data.activeUsers !== undefined) {
-    document.getElementById("users").innerText = data.activeUsers;
-  } else {
-    document.getElementById("users").innerText = "—";
-  }
-});
+// Rust Status
+db.collection("products").doc("rust").get()
+  .then(doc=>{
+    if(doc.exists){
+      const status = doc.data()?.status || "offline";
+      document.getElementById("rustStatus").innerText = status;
+      console.log("Rust Status:", status);
+    } else {
+      console.log("Rust document missing!");
+      document.getElementById("rustStatus").innerText = "—";
+    }
+  })
+  .catch(err=>console.error("Rust status error:", err));
 
-// Keys from subcollection
-db.collection("products").doc("rust").collection("keys").get().then(snapshot => {
-  const list = document.getElementById("keyList");
-  list.innerHTML = "";
-  snapshot.forEach(doc => {
-    const val = doc.data()?.value || "—";
-    list.innerHTML += `<div>${doc.id}: ${val}</div>`;
-  });
-}).catch(console.error);
+// Active Users
+db.collection("products").doc("rust")
+  .collection("stats").doc("global").get()
+  .then(doc=>{
+    if(doc.exists){
+      const users = doc.data()?.activeUsers;
+      document.getElementById("users").innerText = users !== undefined ? users : "—";
+      console.log("Active Users:", users);
+    } else {
+      console.log("Global stats doc missing!");
+      document.getElementById("users").innerText = "—";
+    }
+  })
+  .catch(err=>console.error("Active Users error:", err));
 
-// Rust status
-db.collection("products").doc("rust").onSnapshot(doc => {
-  const status = doc.data()?.status || "offline";
-  document.getElementById("rustStatus").innerText = status;
-});
+// Keys
+db.collection("products").doc("rust")
+  .collection("keys").get()
+  .then(snapshot=>{
+    const list = document.getElementById("keyList");
+    list.innerHTML = "";
+    if(snapshot.empty){ 
+      list.innerHTML = "No keys found"; 
+      console.log("Keys collection empty");
+      return;
+    }
+    snapshot.forEach(doc=>{
+      const val = doc.data()?.value || "—";
+      list.innerHTML += `<div>${doc.id}: ${val}</div>`;
+      console.log("Key:", doc.id, val);
+    });
+  })
+  .catch(err=>console.error("Keys error:", err));
 </script>
-
 </body>
 </html>
