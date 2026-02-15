@@ -126,6 +126,12 @@ button:hover{box-shadow:0 0 15px var(--glow);}
 .status-page .card{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:8px;transition:.3s;}
 .status-dot.flash{animation:flash 1.5s infinite;}
 @keyframes flash{0%,50%,100%{opacity:1;}25%,75%{opacity:0.2;}}
+.login-page{
+  max-width:400px;margin:50px auto;padding:20px;background:var(--panel);border-radius:16px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.login-page input{padding:12px;border-radius:8px;border:none;background:rgba(0,0,0,.3);color:var(--text);}
+.login-page button{margin-top:8px;}
 </style>
 </head>
 
@@ -139,8 +145,8 @@ button:hover{box-shadow:0 0 15px var(--glow);}
     <a id="statusLink" onclick="go('status')">📡 Status</a>
   </div>
   <div>
-    <button id="accountBtn" class="account-btn">Account ⚡</button>
-    <button id="logoutBtn" onclick="logout()" disabled>Logout</button>
+    <button id="accountBtn" class="account-btn">Sign In ⚡</button>
+    <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
   </div>
   <div id="accountMenu" class="account-menu"></div>
 </header>
@@ -187,10 +193,20 @@ button:hover{box-shadow:0 0 15px var(--glow);}
   </div>
 </div>
 
+<!-- LOGIN PAGE -->
+<div class="page" id="loginPage">
+  <div class="login-page">
+    <h2>Sign In</h2>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="login()">Sign In</button>
+    <button onclick="go('home')">Cancel</button>
+  </div>
+</div>
+
 <div class="watermark">© 2026 ArconLoader™</div>
 
 <script>
-// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
   authDomain: "arconloader.firebaseapp.com",
@@ -217,7 +233,7 @@ function go(page){
 // Auth handling
 auth.onAuthStateChanged(user=>{
   const loggedIn = !!user;
-  document.getElementById("logoutBtn").disabled = !loggedIn;
+  document.getElementById("logoutBtn").style.display = loggedIn ? 'inline-block' : 'none';
   document.getElementById("productsLink").style.display = loggedIn ? 'inline' : 'none';
   document.getElementById("homeLink").style.display = loggedIn ? 'inline' : 'none';
   const menu = document.getElementById("accountMenu");
@@ -227,7 +243,7 @@ auth.onAuthStateChanged(user=>{
     menu.innerHTML += `<button onclick="logout()">Logout</button>`;
   } else {
     document.getElementById("accountBtn").innerText = "Sign In ⚡";
-    menu.innerHTML = `<button onclick="showLoginModal()">Sign In</button>`;
+    menu.innerHTML = `<button onclick="go('loginPage')">Sign In</button>`;
   }
 });
 
@@ -279,12 +295,13 @@ function openKeys(){
 }
 function closeModal(){ document.getElementById("modal").classList.remove("show"); }
 
-// Placeholder login modal (you can replace with real UI)
-function showLoginModal(){
-  const email = prompt("Enter email:");
-  const pass = prompt("Enter password:");
-  if(!email || !pass) return;
+// Login page
+function login(){
+  const email = document.getElementById("loginEmail").value;
+  const pass = document.getElementById("loginPass").value;
+  if(!email || !pass) return alert("Enter email and password");
   auth.signInWithEmailAndPassword(email, pass)
+      .then(()=>go('home'))
       .catch(err=>alert(err.message));
 }
 </script>
