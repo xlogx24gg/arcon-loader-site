@@ -32,6 +32,8 @@ body{
 header{
   display:flex;align-items:center;justify-content:space-between;
   padding:16px 24px;
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(10,15,30,0.85);backdrop-filter:blur(12px);
 }
 .logo{
   font-weight:800;font-size:22px;cursor:pointer;
@@ -53,7 +55,7 @@ button{
   cursor:pointer;transition:.3s;box-shadow:0 0 5px #4c6fff66;
 }
 button:hover{box-shadow:0 0 15px var(--glow);}
-.page{display:none;padding:24px;transition:.3s;}
+.page{display:none;padding:24px;transition:.3s;margin-top:80px;}
 .page.active{display:block;}
 
 .card{
@@ -76,7 +78,7 @@ button:hover{box-shadow:0 0 15px var(--glow);}
 }
 .product img{width:100%;height:110px;object-fit:contain;border-radius:10px;}
 .status-container{display:flex;align-items:center;gap:8px;margin:8px 0;}
-.status-dot{width:12px;height:12px;border-radius:50%;animation:pulse 2.5s infinite;}
+.status-dot{width:12px;height:12px;border-radius:50%;animation:pulse 4s infinite;}
 .online{background:#00ff88;}
 .offline{background:#ff4444;}
 .product button{width:100%;margin-top:10px;font-weight:600;}
@@ -124,7 +126,7 @@ button:hover{box-shadow:0 0 15px var(--glow);}
 }
 .account-menu.show{display:flex;}
 .status-page .card{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:8px;transition:.3s;}
-.status-dot.flash{animation:flash 1.5s infinite;}
+.status-dot.flash{animation:flash 3s infinite;}
 @keyframes flash{0%,50%,100%{opacity:1;}25%,75%{opacity:0.2;}}
 .login-page{
   max-width:400px;margin:50px auto;padding:20px;background:var(--panel);border-radius:16px;
@@ -146,7 +148,6 @@ button:hover{box-shadow:0 0 15px var(--glow);}
   </div>
   <div>
     <button id="accountBtn" class="account-btn">Sign In ⚡</button>
-    <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
   </div>
   <div id="accountMenu" class="account-menu"></div>
 </header>
@@ -205,7 +206,7 @@ button:hover{box-shadow:0 0 15px var(--glow);}
   </div>
 </div>
 
-  <!-- REGISTER PAGE -->
+<!-- REGISTER PAGE -->
 <div class="page" id="registerPage">
   <div class="login-page">
     <h2>Create Account</h2>
@@ -214,6 +215,16 @@ button:hover{box-shadow:0 0 15px var(--glow);}
     <input type="password" id="regPassConfirm" placeholder="Confirm Password">
     <button onclick="register()">Register</button>
     <button onclick="go('loginPage')">Back to Sign In</button>
+  </div>
+</div>
+
+<!-- ACCOUNT INFO PAGE -->
+<div class="page" id="accountPage">
+  <div class="login-page">
+    <h2>Account Info</h2>
+    <p>Email: <span id="accEmail">—</span></p>
+    <p>Rank: <span id="accRank">—</span></p>
+    <button onclick="go('home')">Back</button>
   </div>
 </div>
 
@@ -243,26 +254,25 @@ function go(page){
   },300);
 }
 
-// Auth handling
-auth.onAuthStateChanged(user=>{
-  const loggedIn = !!user;
-  document.getElementById("logoutBtn").style.display = loggedIn ? 'inline-block' : 'none';
-  document.getElementById("productsLink").style.display = loggedIn ? 'inline' : 'none';
-  document.getElementById("homeLink").style.display = loggedIn ? 'inline' : 'none';
-  const menu = document.getElementById("accountMenu");
-  if(loggedIn){
-    document.getElementById("accountBtn").innerText = "Account ⚡";
-    menu.innerHTML = `<div>Email: ${user.email || 'Anonymous'}</div>`;
-    menu.innerHTML += `<button onclick="logout()">Logout</button>`;
-  } else {
-    document.getElementById("accountBtn").innerText = "Sign In ⚡";
-    menu.innerHTML = `<button onclick="go('loginPage')">Sign In</button>`;
-  }
-});
+// Show registration page
+function showRegister(){
+  go('registerPage');
+}
 
 // Account button toggle
-document.getElementById("accountBtn").addEventListener("click",()=>{
-  document.getElementById("accountMenu").classList.toggle("show");
+document.getElementById("accountBtn").addEventListener("click", ()=>{
+  auth.onAuthStateChanged(user=>{
+    if(user){
+      document.getElementById("accEmail").innerText = user.email || "Anonymous";
+      // Fetch rank from Firestore if exists
+      db.collection("users").doc(user.uid).get().then(d=>{
+        document.getElementById("accRank").innerText = d.data()?.rank || "User";
+      });
+      go('accountPage');
+    } else {
+      go('loginPage');
+    }
+  });
 });
 
 // Logout
@@ -276,7 +286,7 @@ db.collection("products").doc("rust")
   .onSnapshot(doc=>{
     const data = doc.data();
     document.getElementById("users").innerText = data?.activeUsers ?? "—";
-});
+  });
 
 // Rust status
 db.collection("products").doc("rust")
@@ -284,7 +294,7 @@ db.collection("products").doc("rust")
     const s = doc.data()?.status || "offline";
     document.getElementById("rustText").innerText = s.charAt(0).toUpperCase() + s.slice(1);
     document.getElementById("rustStatus").className = "status-dot "+(s==="online"?"online":"offline");
-});
+  });
 
 // Keys modal
 function openKeys(){
@@ -318,12 +328,6 @@ function login(){
       .catch(err=>alert(err.message));
 }
 
-  // Show registration page
-function showRegister(){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('registerPage').classList.add('active');
-}
-
 // Register new user
 function register(){
   const email = document.getElementById('regEmail').value;
@@ -351,4 +355,3 @@ function register(){
 </script>
 </body>
 </html>
-
