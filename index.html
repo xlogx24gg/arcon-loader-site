@@ -2,30 +2,224 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ArconLoader Debug</title>
+<title>ArconLoader</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<style>
+:root{
+  --bg:#050812;
+  --panel:#0b1224;
+  --border:#1d2b55;
+  --glow:#4c6fff;
+  --text:#e6ebff;
+  --muted:#9aa6ff;
+  --accent:#4c6fff;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui;margin:0;padding:0}
+body{
+  background:radial-gradient(circle at top,#0c1430,#050812);
+  background-size:cover;
+  background-attachment: fixed;
+  color:var(--text);
+  user-select:none;
+  min-height:100vh;
+}
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;
+}
+.logo{
+  font-weight:800;font-size:22px;cursor:pointer;
+  background: linear-gradient(90deg, #4c6fff, #38ffe0, #b95bff);
+  -webkit-background-clip: text;
+  color: transparent;
+  transition: .3s;
+}
+.logo:hover{ text-shadow:0 0 10px var(--glow); }
+.nav a{
+  margin-right:16px;cursor:pointer;color:var(--muted);
+  transition:.2s;
+}
+.nav a:hover{color:#fff;text-shadow:0 0 10px var(--glow);}
+button{
+  background:linear-gradient(90deg, #4c6fff, #38ffe0);
+  border:none;color:#050812;
+  font-weight:600;
+  padding:10px 16px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:.3s;
+  box-shadow:0 0 5px #4c6fff66;
+}
+button:hover{box-shadow:0 0 15px var(--glow);}
+.page{display:none;padding:24px;transition:.3s;}
+.page.active{display:block;}
+
+.card{
+  background:linear-gradient(180deg,#0d1635,#070b18);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  transition:.3s;
+}
+.card:hover{box-shadow:0 0 25px var(--glow); transform: translateY(-2px);}
+
+.stat-box{
+  width:260px;
+  text-align:center;
+  margin:60px auto;
+}
+.stat-number{
+  font-size:42px;font-weight:800;
+}
+
+.products{
+  display:flex;gap:20px;flex-wrap:wrap;margin-top:20px;justify-content:center;
+}
+.product{
+  width:260px;
+  display:flex;flex-direction:column;align-items:center;
+  transition:.3s;
+}
+.product img{
+  width:100%;height:110px;object-fit:contain;
+  border-radius:10px;
+}
+.status-container{
+  display:flex;align-items:center;gap:8px;margin:8px 0;
+}
+.status-dot{
+  width:12px;height:12px;border-radius:50%;
+  animation:pulse 2.5s infinite;
+}
+.online{background:#00ff88}
+.offline{background:#ff4444}
+.product button{
+  width:100%;
+  margin-top:10px;
+  font-weight:600;
+}
+
+@keyframes pulse{
+  0%{opacity:.3}
+  50%{opacity:1}
+  100%{opacity:.3}
+}
+
+.modal{
+  position:fixed;inset:0;background:#000a;
+  display:none;align-items:center;justify-content:center;
+  z-index:10;
+}
+.modal.show{display:flex}
+.modal-box{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  width:420px;
+  animation:slideUp .4s;
+}
+@keyframes slideUp{
+  from{transform:translateY(40px);opacity:0}
+  to{transform:none;opacity:1}
+}
+.close{
+  float:right;cursor:pointer;color:#aaa;font-size:18px;
+}
+.close:hover{color:#fff;}
+
+.watermark{
+  position: fixed; bottom:10px; left:50%; transform:translateX(-50%);
+  font-size:12px; color: rgba(255,255,255,0.15);
+  pointer-events:none;
+}
+
+.loader{
+  position:fixed; inset:0; background:transparent; display:flex; align-items:center; justify-content:center; z-index:50; display:none;
+}
+.loader.show{display:flex;}
+.loader-circle{
+  width:60px;height:60px;border:6px solid rgba(255,255,255,0.2);
+  border-top-color: var(--glow);
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+}
+@keyframes spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+
+footer{
+  text-align:center;padding:14px;
+  color:#5560aa;font-size:12px;
+}
+</style>
 </head>
+
 <body>
 
-<h1>ArconLoader Debug Page</h1>
-
-<div>
+<header>
+  <div class="logo" onclick="go('home')">ArconLoader</div>
+  <div class="nav">
+    <a onclick="go('home')">🏠 Home</a>
+    <a onclick="go('products')">📦 Products</a>
+    <a onclick="go('status')">📡 Status</a>
+  </div>
   <button id="logoutBtn" onclick="logout()" disabled>Logout</button>
+</header>
+
+<div class="loader" id="loader"><div class="loader-circle"></div></div>
+
+<!-- HOME -->
+<div class="page active" id="home">
+  <div class="card stat-box">
+    <h2>Active Users</h2>
+    <div class="stat-number" id="users">—</div>
+  </div>
 </div>
 
-<h2>Status</h2>
-<div>Rust Status: <span id="rustStatus">?</span></div>
+<!-- PRODUCTS -->
+<div class="page" id="products">
+  <h2>Products</h2>
+  <div class="products">
+    <div class="card product">
+      <img src="https://ih1.redbubble.net/image.346295871.1819/raf,360x360,075,t,fafafa:ca443f4786.u3.jpg">
+      <h3>Rust</h3>
+      <div class="status-container">
+        <div class="status-dot online" id="rustStatus"></div>
+        <span id="rustText">Online</span>
+      </div>
+      <button onclick="openKeys()">Manage 🔑</button>
+    </div>
+  </div>
+</div>
 
-<h2>Active Users</h2>
-<div id="users">Loading...</div>
+<!-- STATUS -->
+<div class="page status-page" id="status">
+  <h2>Status</h2>
+  <div class="card">Auth Server — Online <span class="status-dot online"></span></div>
+  <div class="card">Loader API — Online <span class="status-dot online"></span></div>
+</div>
 
-<h2>Keys</h2>
-<div id="keyList">Loading...</div>
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <span class="close" onclick="closeModal()">✕</span>
+    <h3>Rust Keys</h3>
+    <div id="keyList">Loading...</div>
+  </div>
+</div>
+
+<footer>© 2026 ArconLoader™</footer>
 
 <script>
-// Initialize Firebase
+// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
   authDomain: "arconloader.firebaseapp.com",
@@ -34,71 +228,75 @@ const firebaseConfig = {
   messagingSenderId: "931229254243",
   appId: "1:931229254243:web:aee9b1fd143cd3976c6e56"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// Enable logout button if logged in
-auth.onAuthStateChanged(user => {
-  document.getElementById("logoutBtn").disabled = !user;
-  console.log("User state changed:", user);
-});
+// Anonymous login
+auth.signInAnonymously().catch(console.error);
 
-// Logout function
-function logout() {
-  if(!auth.currentUser) { alert("No user logged in"); return; }
-  auth.signOut()
-    .then(()=>alert("Logged out"))
-    .catch(err => console.error("Logout error:", err));
+// Logout
+function logout(){
+  auth.signOut().then(()=>document.getElementById("logoutBtn").disabled=true);
 }
 
-// Rust Status
-db.collection("products").doc("rust").get()
-  .then(doc=>{
-    if(doc.exists){
-      const status = doc.data()?.status || "offline";
-      document.getElementById("rustStatus").innerText = status;
-      console.log("Rust Status:", status);
-    } else {
-      console.log("Rust document missing!");
-      document.getElementById("rustStatus").innerText = "—";
-    }
-  })
-  .catch(err=>console.error("Rust status error:", err));
+// Show logout button only if logged in
+auth.onAuthStateChanged(user=>{
+  document.getElementById("logoutBtn").disabled = !user;
+});
 
-// Active Users
-db.collection("products").doc("rust")
-  .collection("stats").doc("global").get()
-  .then(doc=>{
-    if(doc.exists){
-      const users = doc.data()?.activeUsers;
-      document.getElementById("users").innerText = users !== undefined ? users : "—";
-      console.log("Active Users:", users);
-    } else {
-      console.log("Global stats doc missing!");
-      document.getElementById("users").innerText = "—";
-    }
-  })
-  .catch(err=>console.error("Active Users error:", err));
+// Page navigation with loader
+function go(page){
+  const loader = document.getElementById("loader");
+  loader.classList.add("show");
+  setTimeout(()=>{
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    loader.classList.remove("show");
+  }, 400);
+}
 
-// Keys
+// Active users
 db.collection("products").doc("rust")
-  .collection("keys").get()
-  .then(snapshot=>{
-    const list = document.getElementById("keyList");
-    list.innerHTML = "";
-    if(snapshot.empty){ 
-      list.innerHTML = "No keys found"; 
-      console.log("Keys collection empty");
-      return;
-    }
-    snapshot.forEach(doc=>{
-      const val = doc.data()?.value || "—";
-      list.innerHTML += `<div>${doc.id}: ${val}</div>`;
-      console.log("Key:", doc.id, val);
+  .collection("stats").doc("global")
+  .onSnapshot(doc=>{
+    const data = doc.data();
+    document.getElementById("users").innerText = data?.activeUsers ?? "—";
+});
+
+// Rust status
+db.collection("products").doc("rust")
+  .onSnapshot(doc=>{
+    const s = doc.data()?.status || "offline";
+    document.getElementById("rustText").innerText = s.charAt(0).toUpperCase() + s.slice(1);
+    document.getElementById("rustStatus").className = "status-dot "+(s==="online"?"online":"offline");
+});
+
+// Keys modal
+function openKeys(){
+  const list = document.getElementById("keyList");
+  list.innerHTML = "Loading...";
+  db.collection("products").doc("rust").collection("keys")
+    .get()
+    .then(snap=>{
+      list.innerHTML="";
+      if(snap.empty){ list.innerHTML="<div>No keys found</div>"; return; }
+      snap.forEach(doc=>{
+        const val = doc.data()?.value || "—";
+        list.innerHTML += `<div><strong>${doc.id}</strong>: ${val}</div>`;
+      });
+    })
+    .catch(err=>{
+      list.innerHTML="<div>Error loading keys</div>";
+      console.error(err);
     });
-  })
-  .catch(err=>console.error("Keys error:", err));
+  document.getElementById("modal").classList.add("show");
+}
+
+function closeModal(){
+  document.getElementById("modal").classList.remove("show");
+}
 </script>
 </body>
 </html>
