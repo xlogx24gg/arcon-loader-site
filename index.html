@@ -20,14 +20,14 @@
   --muted:#9aa6ff;
   --accent:#4c6fff;
 }
-*{box-sizing:border-box;font-family:Inter,system-ui;margin:0;padding:0}
+*{box-sizing:border-box;font-family:Inter,system-ui;margin:0;padding:0;user-select:none;}
 body{
   background:radial-gradient(circle at top,#0c1430,#050812);
   background-size:cover;
-  background-attachment: fixed;
+  background-attachment:fixed;
   color:var(--text);
-  user-select:none;
   min-height:100vh;
+  overflow-x:hidden;
 }
 header{
   display:flex;align-items:center;justify-content:space-between;
@@ -40,21 +40,17 @@ header{
   color: transparent;
   transition: .3s;
 }
-.logo:hover{ text-shadow:0 0 10px var(--glow); }
+.logo:hover{ text-shadow:0 0 15px var(--glow); }
 .nav a{
   margin-right:16px;cursor:pointer;color:var(--muted);
   transition:.2s;
 }
-.nav a:hover{color:#fff;text-shadow:0 0 10px var(--glow);}
+.nav a:hover{color:#fff;text-shadow:0 0 15px var(--glow);}
 button{
   background:linear-gradient(90deg, #4c6fff, #38ffe0);
-  border:none;color:#050812;
-  font-weight:600;
-  padding:10px 16px;
-  border-radius:12px;
-  cursor:pointer;
-  transition:.3s;
-  box-shadow:0 0 5px #4c6fff66;
+  border:none;color:#050812;font-weight:600;
+  padding:10px 16px;border-radius:12px;
+  cursor:pointer;transition:.3s;box-shadow:0 0 5px #4c6fff66;
 }
 button:hover{box-shadow:0 0 15px var(--glow);}
 .page{display:none;padding:24px;transition:.3s;}
@@ -65,58 +61,33 @@ button:hover{box-shadow:0 0 15px var(--glow);}
   border:1px solid var(--border);
   border-radius:16px;
   padding:20px;
-  transition:.3s;
+  transition:.4s;
 }
-.card:hover{box-shadow:0 0 25px var(--glow); transform: translateY(-2px);}
+.card:hover{box-shadow:0 0 25px var(--glow); transform: translateY(-3px);}
 
-.stat-box{
-  width:260px;
-  text-align:center;
-  margin:60px auto;
-}
-.stat-number{
-  font-size:42px;font-weight:800;
-}
+.stat-box{width:260px;text-align:center;margin:60px auto;}
+.stat-number{font-size:42px;font-weight:800;}
 
 .products{
   display:flex;gap:20px;flex-wrap:wrap;margin-top:20px;justify-content:center;
 }
 .product{
-  width:260px;
-  display:flex;flex-direction:column;align-items:center;
-  transition:.3s;
+  width:260px;display:flex;flex-direction:column;align-items:center;transition:.3s;
 }
-.product img{
-  width:100%;height:110px;object-fit:contain;
-  border-radius:10px;
-}
-.status-container{
-  display:flex;align-items:center;gap:8px;margin:8px 0;
-}
-.status-dot{
-  width:12px;height:12px;border-radius:50%;
-  animation:pulse 2.5s infinite;
-}
-.online{background:#00ff88}
-.offline{background:#ff4444}
-.product button{
-  width:100%;
-  margin-top:10px;
-  font-weight:600;
-}
+.product img{width:100%;height:110px;object-fit:contain;border-radius:10px;}
+.status-container{display:flex;align-items:center;gap:8px;margin:8px 0;}
+.status-dot{width:12px;height:12px;border-radius:50%;animation:pulse 2.5s infinite;}
+.online{background:#00ff88;}
+.offline{background:#ff4444;}
+.product button{width:100%;margin-top:10px;font-weight:600;}
 
-@keyframes pulse{
-  0%{opacity:.3}
-  50%{opacity:1}
-  100%{opacity:.3}
-}
+@keyframes pulse{0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
 
 .modal{
   position:fixed;inset:0;background:#000a;
-  display:none;align-items:center;justify-content:center;
-  z-index:10;
+  display:none;align-items:center;justify-content:center;z-index:10;
 }
-.modal.show{display:flex}
+.modal.show{display:flex;}
 .modal-box{
   background:var(--panel);
   border:1px solid var(--border);
@@ -125,40 +96,36 @@ button:hover{box-shadow:0 0 15px var(--glow);}
   width:420px;
   animation:slideUp .4s;
 }
-@keyframes slideUp{
-  from{transform:translateY(40px);opacity:0}
-  to{transform:none;opacity:1}
-}
-.close{
-  float:right;cursor:pointer;color:#aaa;font-size:18px;
-}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0} to{transform:none;opacity:1}}
+.close{float:right;cursor:pointer;color:#aaa;font-size:18px;}
 .close:hover{color:#fff;}
 
 .watermark{
-  position: fixed; bottom:10px; left:50%; transform:translateX(-50%);
-  font-size:12px; color: rgba(255,255,255,0.15);
+  position:fixed;bottom:10px;left:50%;transform:translateX(-50%);
+  font-size:12px;color:rgba(255,255,255,0.15);
   pointer-events:none;
 }
 
 .loader{
-  position:fixed; inset:0; background:transparent; display:flex; align-items:center; justify-content:center; z-index:50; display:none;
+  position:fixed;inset:0;background:transparent;display:flex;align-items:center;justify-content:center;z-index:50;display:none;
 }
 .loader.show{display:flex;}
 .loader-circle{
-  width:60px;height:60px;border:6px solid rgba(255,255,255,0.2);
+  width:50px;height:50px;border:6px solid rgba(255,255,255,0.2);
   border-top-color: var(--glow);
   border-radius:50%;
-  animation:spin 0.7s linear infinite;
+  animation:spin 0.5s linear infinite;
 }
-@keyframes spin{
-  0%{transform:rotate(0deg)}
-  100%{transform:rotate(360deg)}
-}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 
-footer{
-  text-align:center;padding:14px;
-  color:#5560aa;font-size:12px;
+.account-btn{background:none;border:none;color:var(--text);cursor:pointer;font-weight:600;}
+.account-menu{
+  position:absolute;top:60px;right:20px;background:var(--panel);padding:12px;border-radius:12px;display:none;flex-direction:column;gap:8px;box-shadow:0 0 15px var(--glow);z-index:20;
 }
+.account-menu.show{display:flex;}
+.status-page .card{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:8px;transition:.3s;}
+.status-dot.flash{animation:flash 1.5s infinite;}
+@keyframes flash{0%,50%,100%{opacity:1;}25%,75%{opacity:0.2;}}
 </style>
 </head>
 
@@ -167,11 +134,15 @@ footer{
 <header>
   <div class="logo" onclick="go('home')">ArconLoader</div>
   <div class="nav">
-    <a onclick="go('home')">🏠 Home</a>
-    <a onclick="go('products')">📦 Products</a>
-    <a onclick="go('status')">📡 Status</a>
+    <a id="homeLink" onclick="go('home')">🏠 Home</a>
+    <a id="productsLink" onclick="go('products')">📦 Products</a>
+    <a id="statusLink" onclick="go('status')">📡 Status</a>
   </div>
-  <button id="logoutBtn" onclick="logout()" disabled>Logout</button>
+  <div>
+    <button id="accountBtn" class="account-btn">Account ⚡</button>
+    <button id="logoutBtn" onclick="logout()" disabled>Logout</button>
+  </div>
+  <div id="accountMenu" class="account-menu"></div>
 </header>
 
 <div class="loader" id="loader"><div class="loader-circle"></div></div>
@@ -203,11 +174,11 @@ footer{
 <!-- STATUS -->
 <div class="page status-page" id="status">
   <h2>Status</h2>
-  <div class="card">Auth Server — Online <span class="status-dot online"></span></div>
-  <div class="card">Loader API — Online <span class="status-dot online"></span></div>
+  <div class="card"><span>Auth Server — Online</span> <span class="status-dot flash online"></span></div>
+  <div class="card"><span>Loader API — Online</span> <span class="status-dot flash online"></span></div>
 </div>
 
-<!-- MODAL -->
+<!-- KEYS MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
     <span class="close" onclick="closeModal()">✕</span>
@@ -216,10 +187,10 @@ footer{
   </div>
 </div>
 
-<footer>© 2026 ArconLoader™</footer>
+<div class="watermark">© 2026 ArconLoader™</div>
 
 <script>
-// 🔥 FIREBASE CONFIG
+// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAn4MmK4KXuV3qW6SgmjCHVlDEDZ2ku9Wc",
   authDomain: "arconloader.firebaseapp.com",
@@ -228,23 +199,9 @@ const firebaseConfig = {
   messagingSenderId: "931229254243",
   appId: "1:931229254243:web:aee9b1fd143cd3976c6e56"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
-
-// Anonymous login
-auth.signInAnonymously().catch(console.error);
-
-// Logout
-function logout(){
-  auth.signOut().then(()=>document.getElementById("logoutBtn").disabled=true);
-}
-
-// Show logout button only if logged in
-auth.onAuthStateChanged(user=>{
-  document.getElementById("logoutBtn").disabled = !user;
-});
 
 // Page navigation with loader
 function go(page){
@@ -254,10 +211,37 @@ function go(page){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById(page).classList.add('active');
     loader.classList.remove("show");
-  }, 400);
+  },300);
 }
 
-// Active users
+// Auth handling
+auth.onAuthStateChanged(user=>{
+  const loggedIn = !!user;
+  document.getElementById("logoutBtn").disabled = !loggedIn;
+  document.getElementById("productsLink").style.display = loggedIn ? 'inline' : 'none';
+  document.getElementById("homeLink").style.display = loggedIn ? 'inline' : 'none';
+  const menu = document.getElementById("accountMenu");
+  if(loggedIn){
+    document.getElementById("accountBtn").innerText = "Account ⚡";
+    menu.innerHTML = `<div>Email: ${user.email || 'Anonymous'}</div>`;
+    menu.innerHTML += `<button onclick="logout()">Logout</button>`;
+  } else {
+    document.getElementById("accountBtn").innerText = "Sign In ⚡";
+    menu.innerHTML = `<button onclick="showLoginModal()">Sign In</button>`;
+  }
+});
+
+// Account button toggle
+document.getElementById("accountBtn").addEventListener("click",()=>{
+  document.getElementById("accountMenu").classList.toggle("show");
+});
+
+// Logout
+function logout(){
+  auth.signOut().catch(console.error);
+}
+
+// Active Users
 db.collection("products").doc("rust")
   .collection("stats").doc("global")
   .onSnapshot(doc=>{
@@ -293,9 +277,15 @@ function openKeys(){
     });
   document.getElementById("modal").classList.add("show");
 }
+function closeModal(){ document.getElementById("modal").classList.remove("show"); }
 
-function closeModal(){
-  document.getElementById("modal").classList.remove("show");
+// Placeholder login modal (you can replace with real UI)
+function showLoginModal(){
+  const email = prompt("Enter email:");
+  const pass = prompt("Enter password:");
+  if(!email || !pass) return;
+  auth.signInWithEmailAndPassword(email, pass)
+      .catch(err=>alert(err.message));
 }
 </script>
 </body>
